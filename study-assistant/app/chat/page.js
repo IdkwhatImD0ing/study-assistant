@@ -1,7 +1,7 @@
 'use client'
 
-import {useState, useEffect, useRef} from 'react'
-import {Box, TextField, Button, Typography, Stack} from '@mui/material'
+import { useState, useEffect, useRef } from 'react'
+import { Box, TextField, Button, Typography, Stack } from '@mui/material'
 
 function ChatInterface() {
   const [messages, setMessages] = useState([])
@@ -9,20 +9,32 @@ function ChatInterface() {
   const endOfMessagesRef = useRef(null)
 
   const scrollToBottom = () => {
-    endOfMessagesRef.current.scrollIntoView({behavior: 'smooth'})
+    endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   useEffect(scrollToBottom, [messages])
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    setMessages([
-      ...messages,
-      {user: 'user', text: input},
-      {user: 'bot', text: input},
-    ])
     setInput('')
+    messages.push({ role: 'user', content: input })
+    setMessages(messages)
+
+    // make an post request to api/chat with message as body
+    fetch('/api/chat', {
+      method: 'POST',
+      body: JSON.stringify({ messages: messages }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data)
+        setMessages([...messages, { role: 'assistant', content: data.content }])
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
   }
 
   return (
@@ -44,12 +56,12 @@ function ChatInterface() {
           <Box
             key={index}
             sx={{
-              textAlign: message.user === 'user' ? 'right' : 'left',
+              textAlign: message.role === 'user' ? 'right' : 'left',
             }}
           >
             <Typography variant="body1">
-              <strong>{message.user === 'user' ? 'You: ' : 'Bot: '}</strong>
-              {message.text}
+              <strong>{message.role === 'user' ? 'You: ' : 'assistant: '}</strong>
+              {message.content}
             </Typography>
           </Box>
         ))}
@@ -71,7 +83,8 @@ function ChatInterface() {
           fullWidth
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          sx={{marginRight: 2}}
+          sx={{ marginRight: 2 }}
+          autoComplete="off"
         />
         <Button variant="contained" type="submit">
           Send
