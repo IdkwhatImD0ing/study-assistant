@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server'
 
 export async function GET() {
-  return new NextResponse.json({message: 'Hello, World!'})
+  return NextResponse.json({body: 'Hello, World!'})
 }
