@@ -3,6 +3,14 @@
 import {useState, useRef} from 'react'
 import {useAudio} from 'react-use'
 import {saveAs} from 'file-saver'
+import {Button, Box, IconButton, Slider, Stack, Typography} from '@mui/material'
+import {
+  PlayCircleOutline,
+  PauseCircleOutline,
+  Mic,
+  MicOff,
+  Download,
+} from '@mui/icons-material'
 
 function AudioRecorder() {
   const [audioData, setAudioData] = useState(null)
@@ -10,7 +18,7 @@ function AudioRecorder() {
   const [audioURL, setAudioURL] = useState('')
   const mediaRecorder = useRef(null)
 
-  const [audio, state, controls, ref] = useAudio({
+  const [audio, state, controls] = useAudio({
     src: audioURL,
     autoPlay: false,
   })
@@ -49,19 +57,56 @@ function AudioRecorder() {
   }
 
   return (
-    <div>
-      <button onClick={recording ? stopRecording : startRecording}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        gap: 2,
+      }}
+    >
+      <Button
+        variant="outlined"
+        startIcon={recording ? <MicOff /> : <Mic />}
+        onClick={recording ? stopRecording : startRecording}
+      >
         {recording ? 'Stop Recording' : 'Start Recording'}
-      </button>
+      </Button>
+
       {audioData && (
-        <>
-          {audio}
-          <button onClick={controls.play}>Play</button>
-          <button onClick={controls.pause}>Pause</button>
-          <button onClick={downloadRecording}>Download</button>
-        </>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <IconButton onClick={state.paused ? controls.play : controls.pause}>
+            {state.paused ? <PlayCircleOutline /> : <PauseCircleOutline />}
+          </IconButton>
+
+          <Slider
+            value={state.volume}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={(event, newValue) => controls.volume(newValue)}
+            aria-label="Volume"
+            valueLabelDisplay="auto"
+            sx={{
+              width: '200px',
+            }}
+          />
+
+          <IconButton onClick={downloadRecording}>
+            <Download />
+          </IconButton>
+        </Stack>
       )}
-    </div>
+
+      <Typography variant="caption" color="text.secondary">
+        Note: Make sure to give the browser permission to access your
+        microphone.
+      </Typography>
+
+      {audio}
+    </Box>
   )
 }
 
