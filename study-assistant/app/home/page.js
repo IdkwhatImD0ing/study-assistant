@@ -1,4 +1,5 @@
 "use client";
+
 import Navbar from "./Components/NavBar/NavBar";
 import Footer from "./Components/Footer/Footer";
 import Typography from "@mui/material/Typography";
