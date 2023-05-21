@@ -1,75 +1,102 @@
-"use client";
-import React, { useState, useCallback } from "react";
-import { Button, Container, Box, Typography } from "@mui/material";
+'use client'
+import React, {useState} from 'react'
+import {
+  Button,
+  Container,
+  Box,
+  Typography,
+  TextField,
+  CircularProgress,
+} from '@mui/material'
+import {styled} from '@mui/system'
+
+const Input = styled('input')({
+  display: 'none',
+})
 
 export default function Pdf() {
-  const [file, setFile] = useState();
-  const [extractedText, setExtractedText] = useState("");
-
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
+  const [file, setFile] = useState()
+  const [extractedText, setExtractedText] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+    setFile(event.target.files[0])
+  }
 
   const extractText = async () => {
+    setLoading(true)
+    setExtractedText('')
     if (!file) {
-      return;
+      return
     }
 
     try {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const arrayBuffer = event.target.result;
+      const formData = new FormData()
+      formData.append('pdf', file)
 
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/pdf",
-          },
-          body: arrayBuffer,
-        });
+      const response = await fetch('http://localhost:3001/upload', {
+        method: 'POST',
+        body: formData,
+      })
 
-        if (response.ok) {
-          const data = await response.json();
-          setExtractedText(data.text);
-        } else {
-          throw new Error("Failed to extract text");
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
+      if (response.ok) {
+        const text = await response.text()
+        setExtractedText(text)
+      } else {
+        throw new Error('Failed to extract text')
+      }
     } catch (error) {
-      console.error(error);
-      setExtractedText("Error occurred during text extraction");
+      console.error(error)
+      setExtractedText('Error occurred during text extraction')
+    } finally {
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Container>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           gap: 2,
           marginTop: 5,
-          height: "100vh",
+          overflow: 'auto',
+          minHeight: '100vh',
         }}
       >
-        <input
-          type="file"
-          onChange={handleFileChange}
-          accept="application/pdf"
-          style={{ margin: "20px 0" }}
-        />
-        <Button variant="contained" color="primary" onClick={extractText}>
-          Extract Text
+        <Typography variant="h2" gutterBottom>
+          PDF Text Extractor
+        </Typography>
+        <label htmlFor="contained-button-file">
+          <Input
+            accept="application/pdf"
+            id="contained-button-file"
+            type="file"
+            onChange={handleFileChange}
+          />
+          <Button variant="outlined" component="span">
+            Upload PDF
+          </Button>
+        </label>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={extractText}
+          disabled={!file || loading}
+        >
+          {loading ? <CircularProgress size={24} /> : 'Extract Text'}
         </Button>
-        <Typography variant="body1">{extractedText}</Typography>
+        {extractedText && (
+          <Typography
+            variant="body1"
+            sx={{mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2}}
+          >
+            {extractedText}
+          </Typography>
+        )}
       </Box>
     </Container>
-  );
+  )
 }
