@@ -1,10 +1,17 @@
 'use client'
 
 import {useState, useEffect, useRef} from 'react'
-import {Box, Button, CircularProgress} from '@mui/material'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Typography,
+} from '@mui/material'
 import {saveAs} from 'file-saver'
 let RecordRTC
 import {Mic, MicOff} from '@mui/icons-material'
+import {styled} from '@mui/system'
 
 const Input = styled('input')({
   display: 'none',
@@ -30,7 +37,6 @@ function ChatInterface() {
 
   const extractText = async () => {
     setLoadingPDF(true)
-    setExtractedText('')
     if (!file) {
       return
     }
@@ -53,9 +59,9 @@ function ChatInterface() {
         }
         const temp = {
           userUUID: 'temp',
-          contenxts: chunks,
+          contents: chunks,
         }
-        const response = await fetch('/api/database', {
+        fetch('/api/database', {
           method: 'PUT',
           body: JSON.stringify(temp),
           headers: {
@@ -74,7 +80,6 @@ function ChatInterface() {
       }
     } catch (error) {
       console.error(error)
-      setExtractedText('Error occurred during text extraction')
     }
   }
   //END PDF
@@ -234,7 +239,11 @@ function ChatInterface() {
     endOfMessagesRef.current.scrollIntoView({behavior: 'smooth'})
   }
 
-  useEffect(scrollToBottom, [messages])
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom
+    }
+  }, [messages])
 
   if (!pdfParsed) {
     return (
