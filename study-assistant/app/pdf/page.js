@@ -7,37 +7,37 @@ import {
   Typography,
   TextField,
   CircularProgress,
-} from "@mui/material";
-import { styled } from "@mui/system";
-import Navbar from "../Components/NavBar/NavBar";
-import Footer from "../Components/Footer/Footer";
-import UUIDProvider from "../UUIDProvider";
-import UUIDContext from "../UUIDContext";
-import { useContext } from "react";
+} from '@mui/material'
+import {styled} from '@mui/system'
+import Navbar from '../Components/NavBar/NavBar'
+import Footer from '../Components/Footer/Footer'
+import UUIDProvider from '../UUIDProvider'
+import UUIDContext from '../UUIDContext'
+import {useContext} from 'react'
 
-const Input = styled("input")({
-  display: "none",
-});
+const Input = styled('input')({
+  display: 'none',
+})
 
 export default function Pdf() {
-  const [file, setFile] = useState();
-  const [extractedText, setExtractedText] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState()
+  const [extractedText, setExtractedText] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+    setFile(event.target.files[0])
+  }
 
   const extractText = async () => {
-    setLoading(true);
-    setExtractedText("");
+    setLoading(true)
+    setExtractedText('')
     if (!file) {
-      return;
+      return
     }
 
     try {
-      const formData = new FormData();
-      formData.append("pdf", file);
+      const formData = new FormData()
+      formData.append('pdf', file)
 
       const response = await fetch(
         'https://intelliconverse.azurewebsites.net/upload',
@@ -48,23 +48,23 @@ export default function Pdf() {
       )
 
       if (response.ok) {
-        const text = await response.text();
+        const text = await response.text()
         // Split into array of strings of size 4000 characters
-        const chunks = [];
+        const chunks = []
         for (let i = 0; i < text.length; i += 4000) {
-          chunks.push(text.substring(i, i + 4000));
+          chunks.push(text.substring(i, i + 4000))
         }
-        setExtractedText(text);
+        setExtractedText(text)
       } else {
-        throw new Error("Failed to extract text");
+        throw new Error('Failed to extract text')
       }
     } catch (error) {
-      console.error(error);
-      setExtractedText("Error occurred during text extraction");
+      console.error(error)
+      setExtractedText('Error occurred during text extraction')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <section className="pdf">
@@ -72,13 +72,13 @@ export default function Pdf() {
       <Container>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             gap: 2,
             marginTop: 5,
-            overflow: "auto",
-            minHeight: "100vh",
+            overflow: 'auto',
+            minHeight: '100vh',
           }}
         >
           <Typography variant="h2" gutterBottom>
@@ -101,23 +101,19 @@ export default function Pdf() {
             onClick={extractText}
             disabled={!file || loading}
           >
-            {loading ? <CircularProgress size={24} /> : "Extract Text"}
+            {loading ? <CircularProgress size={24} /> : 'Extract Text'}
           </Button>
           {extractedText && (
             <Typography
               variant="body1"
-              sx={{ mt: 3, p: 2, bgcolor: "background.paper", borderRadius: 2 }}
+              sx={{mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2}}
             >
               {extractedText}
             </Typography>
           )}
         </Box>
-        <UUIDProvider>
-          <MyComponent />
-        </UUIDProvider>
       </Container>
       <Footer />
     </section>
-  );
+  )
 }
-
