@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { Box, TextField, Button, Typography, Stack } from '@mui/material'
+import {useState, useEffect, useRef} from 'react'
+import {Box, TextField, Button, Typography, Stack} from '@mui/material'
 
 function ChatInterface() {
   const [messages, setMessages] = useState([])
@@ -9,7 +9,7 @@ function ChatInterface() {
   const endOfMessagesRef = useRef(null)
 
   const scrollToBottom = () => {
-    endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' })
+    endOfMessagesRef.current.scrollIntoView({behavior: 'smooth'})
   }
 
   useEffect(scrollToBottom, [messages])
@@ -17,20 +17,20 @@ function ChatInterface() {
   const handleSubmit = (e) => {
     e.preventDefault()
     setInput('')
-    messages.push({ role: 'user', content: input })
+    messages.push({role: 'user', content: input})
     setMessages(messages)
 
     // make an post request to api/chat with message as body
     fetch('/api/chat', {
       method: 'POST',
-      body: JSON.stringify({ messages: messages }),
+      body: JSON.stringify({messages: messages}),
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => response.json())
+    })
+      .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', data)
-        setMessages([...messages, { role: 'assistant', content: data.content }])
+        setMessages([...messages, {role: 'assistant', content: data.content}])
       })
       .catch((error) => {
         console.error('Error:', error)
@@ -42,14 +42,15 @@ function ChatInterface() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: '100%',
         justifyContent: 'space-between',
       }}
     >
       <Box
         sx={{
-          overflowY: 'scroll',
           padding: 2,
+          overflowY: 'auto',
+          height: '80vh',
         }}
       >
         {messages.map((message, index) => (
@@ -57,13 +58,15 @@ function ChatInterface() {
             key={index}
             sx={{
               display: 'flex',
-              justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
+              justifyContent:
+                message.role === 'user' ? 'flex-end' : 'flex-start',
               marginBottom: 1,
             }}
           >
             <Box
               sx={{
-                backgroundColor: message.role === 'user' ? '#e2f2ff' : '#f7f7f7',
+                backgroundColor:
+                  message.role === 'user' ? '#e2f2ff' : '#f7f7f7',
                 borderRadius: 4,
                 padding: 1,
                 maxWidth: '70%',
@@ -71,7 +74,9 @@ function ChatInterface() {
               }}
             >
               <Typography variant="body1">
-                <strong>{message.role === 'user' ? 'You: ' : 'Assistant: '}</strong>
+                <strong>
+                  {message.role === 'user' ? 'You: ' : 'Assistant: '}
+                </strong>
                 {message.content}
               </Typography>
             </Box>
@@ -95,7 +100,7 @@ function ChatInterface() {
           fullWidth
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          sx={{ marginRight: 2 }}
+          sx={{marginRight: 2}}
           autoComplete="off"
         />
         <Button variant="contained" type="submit">
