@@ -1,8 +1,16 @@
-'use client'
-import {useState, useRef} from 'react'
-import {useAudio} from 'react-use'
-import {saveAs} from 'file-saver'
-import {Button, Box, IconButton, Slider, Stack, Typography} from '@mui/material'
+"use client";
+import { useState, useRef, useEffect } from "react";
+import { useAudio } from "react-use";
+let RecordRTC;
+import { saveAs } from "file-saver";
+import {
+  Button,
+  Box,
+  IconButton,
+  Slider,
+  Stack,
+  Typography,
+} from "@mui/material";
 import {
   PlayCircleOutline,
   PauseCircleOutline,
@@ -10,93 +18,117 @@ import {
   MicOff,
   Download,
   CloudUpload,
-} from '@mui/icons-material'
+} from "@mui/icons-material";
 
 function AudioRecorder() {
-  const [audioData, setAudioData] = useState(null)
-  const [recording, setRecording] = useState(false)
-  const [audioURL, setAudioURL] = useState('')
-  const [responseBody, setResponseBody] = useState(null)
-  const [submitting, setSubmitting] = useState(false)
-  const mediaRecorder = useRef(null)
+  const [audioData, setAudioData] = useState(null);
+  const [recording, setRecording] = useState(false);
+  const [audioURL, setAudioURL] = useState("");
+  const [responseBody, setResponseBody] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const recorder = useRef(null);
+  const microphone = useRef(null);
+
+  useEffect(() => {
+    import("recordrtc").then((r) => {
+      RecordRTC = r.default;
+    });
+  }, []);
 
   const [audio, state, controls] = useAudio({
     src: audioURL,
     autoPlay: false,
-  })
+  });
+
+  const captureMicrophone = async (callback) => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      callback(stream);
+    } catch (error) {
+      alert("Unable to access your microphone.");
+      console.error(error);
+    }
+  };
+
+  const stopRecordingCallback = () => {
+    const audioBlob = recorder.current.getBlob();
+    setAudioData(audioBlob);
+    const audioURL = URL.createObjectURL(audioBlob);
+    setAudioURL(audioURL);
+
+    recorder.current.microphone.stop();
+    setRecording(false);
+  };
 
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({audio: true})
-    mediaRecorder.current = new MediaRecorder(stream)
-    mediaRecorder.current.start()
+    await captureMicrophone((stream) => {
+      microphone.current = stream;
 
-    setRecording(true)
+      const options = {
+        type: "audio",
+        recorderType: RecordRTC.StereoAudioRecorder,
+        desiredSampRate: 16000,
+        numberOfAudioChannels: 1,
+      };
 
-    const audioChunks = []
-    mediaRecorder.current.addEventListener('dataavailable', (event) => {
-      audioChunks.push(event.data)
-    })
+      recorder.current = RecordRTC(stream, options);
+      recorder.current.startRecording();
+      recorder.current.microphone = microphone.current;
 
-    mediaRecorder.current.addEventListener('stop', () => {
-      const audioBlob = new Blob(audioChunks, {type: 'audio/wav'})
-      setAudioData(audioBlob)
-      const audioURL = URL.createObjectURL(audioBlob)
-      setAudioURL(audioURL)
-    })
-  }
+      setRecording(true);
+    });
+  };
 
   const stopRecording = () => {
-    if (mediaRecorder.current) {
-      mediaRecorder.current.stop()
-      setRecording(false)
+    if (recorder.current) {
+      recorder.current.stopRecording(stopRecordingCallback);
     }
-  }
+  };
 
   const handleSubmit = async () => {
-    setSubmitting(true)
+    setSubmitting(true);
 
     // Send audio to /api/stt
     try {
-      const response = await fetch('/api/stt', {
-        method: 'POST',
+      const response = await fetch("/api/stt", {
+        method: "POST",
         headers: {
-          'Content-Type': 'audio/wav',
+          "Content-Type": "audio/wav",
         },
         body: audioData,
-      })
+      });
 
-      const responseData = await response.json()
-      setResponseBody(responseData.body)
+      const responseData = await response.json();
+      setResponseBody(responseData.body);
     } catch (error) {
-      console.error('Error:', error)
+      console.error("Error:", error);
     }
 
-    setSubmitting(false)
-  }
+    setSubmitting(false);
+  };
 
   const downloadRecording = () => {
     if (audioData) {
-      saveAs(audioData, 'recording.wav')
+      saveAs(audioData, "recording.wav");
     }
-  }
+  };
 
   const handleUpload = (event) => {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     if (file) {
-      setAudioData(file)
-      const audioURL = URL.createObjectURL(file)
-      setAudioURL(audioURL)
+      setAudioData(file);
+      const audioURL = URL.createObjectURL(file);
+      setAudioURL(audioURL);
     }
-  }
-
+  };
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
         gap: 2,
       }}
     >
@@ -105,7 +137,7 @@ function AudioRecorder() {
         startIcon={recording ? <MicOff /> : <Mic />}
         onClick={recording ? stopRecording : startRecording}
       >
-        {recording ? 'Stop Recording' : 'Start Recording'}
+        {recording ? "Stop Recording" : "Start Recording"}
       </Button>
       <input type="file" accept="audio/wav" onChange={handleUpload} />
 
@@ -124,7 +156,7 @@ function AudioRecorder() {
             aria-label="Volume"
             valueLabelDisplay="auto"
             sx={{
-              width: '200px',
+              width: "200px",
             }}
           />
 
@@ -158,7 +190,7 @@ function AudioRecorder() {
         </Box>
       )}
     </Box>
-  )
+  );
 }
 
-export default AudioRecorder
+export default AudioRecorder;
