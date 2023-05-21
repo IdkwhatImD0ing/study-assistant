@@ -1,7 +1,11 @@
 'use client'
 
-import {useState, useEffect, useRef} from 'react'
-import {Box, TextField, Button, Typography, Stack} from '@mui/material'
+import { useState, useEffect, useRef } from 'react'
+import { Box, TextField, Button, Typography } from '@mui/material'
+import UUIDProvider from '../UUIDProvider'
+import UUIDContext from '../UUIDContext'
+import { useContext } from 'react';
+
 
 function ChatInterface() {
   const [messages, setMessages] = useState([])
@@ -9,7 +13,7 @@ function ChatInterface() {
   const endOfMessagesRef = useRef(null)
 
   const scrollToBottom = () => {
-    endOfMessagesRef.current.scrollIntoView({behavior: 'smooth'})
+    endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   useEffect(scrollToBottom, [messages])
@@ -19,8 +23,8 @@ function ChatInterface() {
 
     setMessages([
       ...messages,
-      {user: 'user', text: input},
-      {user: 'bot', text: input},
+      { user: 'user', text: input },
+      { user: 'bot', text: input },
     ])
     setInput('')
   }
@@ -71,14 +75,27 @@ function ChatInterface() {
           fullWidth
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          sx={{marginRight: 2}}
+          sx={{ marginRight: 2 }}
         />
         <Button variant="contained" type="submit">
           Send
         </Button>
       </Box>
+      <UUIDProvider>
+        <MyComponent />
+      </UUIDProvider>
     </Box>
   )
 }
+
+const MyComponent = () => {
+  const uuid = useContext(UUIDContext);
+
+  return (
+    <div>
+      Unique Value: {uuid}
+    </div>
+  );
+};
 
 export default ChatInterface
