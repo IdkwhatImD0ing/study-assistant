@@ -108,7 +108,7 @@ function ChatInterface() {
     return () => {
       window.removeEventListener('unload', handleUnload)
     }
-  }, []) // Empty dependency array means this effect runs once on mount and cleanup on unmount
+  }, [uuid]) // Empty dependency array means this effect runs once on mount and cleanup on unmount
 
   useEffect(() => {
     import('recordrtc').then((r) => {
@@ -117,6 +117,7 @@ function ChatInterface() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recording])
 
   const handleKeyDown = (event) => {
@@ -310,7 +311,7 @@ function ChatInterface() {
           />
 
           <Typography variant="h2" gutterBottom>
-            Let's Index your PDF!
+            Let&apos;s Index your PDF!
           </Typography>
           <label htmlFor="contained-button-file">
             <Input
