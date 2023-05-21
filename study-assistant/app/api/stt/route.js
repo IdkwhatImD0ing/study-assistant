@@ -15,7 +15,7 @@ export async function POST(req) {
   // Assume body = the .wav file
   for await (const chunk of req.body) {
     pushStream.write(chunk.buffer)
-  }
+  } 
   pushStream.close()
 
   let audioConfig = sdk.AudioConfig.fromStreamInput(pushStream)

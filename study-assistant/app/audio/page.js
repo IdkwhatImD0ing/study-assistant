@@ -1,5 +1,4 @@
 'use client'
-
 import {useState, useRef} from 'react'
 import {useAudio} from 'react-use'
 import {saveAs} from 'file-saver'
@@ -10,12 +9,15 @@ import {
   Mic,
   MicOff,
   Download,
+  CloudUpload,
 } from '@mui/icons-material'
 
 function AudioRecorder() {
   const [audioData, setAudioData] = useState(null)
   const [recording, setRecording] = useState(false)
   const [audioURL, setAudioURL] = useState('')
+  const [responseBody, setResponseBody] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
   const mediaRecorder = useRef(null)
 
   const [audio, state, controls] = useAudio({
@@ -50,9 +52,40 @@ function AudioRecorder() {
     }
   }
 
+  const handleSubmit = async () => {
+    setSubmitting(true)
+
+    // Send audio to /api/stt
+    try {
+      const response = await fetch('/api/stt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'audio/wav',
+        },
+        body: audioData,
+      })
+
+      const responseData = await response.json()
+      setResponseBody(responseData.body)
+    } catch (error) {
+      console.error('Error:', error)
+    }
+
+    setSubmitting(false)
+  }
+
   const downloadRecording = () => {
     if (audioData) {
       saveAs(audioData, 'recording.wav')
+    }
+  }
+
+  const handleUpload = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      setAudioData(file)
+      const audioURL = URL.createObjectURL(file)
+      setAudioURL(audioURL)
     }
   }
 
@@ -74,6 +107,7 @@ function AudioRecorder() {
       >
         {recording ? 'Stop Recording' : 'Start Recording'}
       </Button>
+      <input type="file" accept="audio/wav" onChange={handleUpload} />
 
       {audioData && (
         <Stack direction="row" spacing={2} alignItems="center">
@@ -97,6 +131,16 @@ function AudioRecorder() {
           <IconButton onClick={downloadRecording}>
             <Download />
           </IconButton>
+
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<CloudUpload />}
+            onClick={handleSubmit}
+            disabled={!audioData}
+          >
+            Submit
+          </Button>
         </Stack>
       )}
 
@@ -106,6 +150,13 @@ function AudioRecorder() {
       </Typography>
 
       {audio}
+
+      {responseBody && (
+        <Box>
+          <Typography variant="h6">Response Body:</Typography>
+          <pre>{JSON.stringify(responseBody, null, 2)}</pre>
+        </Box>
+      )}
     </Box>
   )
 }
