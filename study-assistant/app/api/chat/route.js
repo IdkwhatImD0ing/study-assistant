@@ -1,7 +1,7 @@
-import { NextResponse, NextRequest } from "next/server";
+import {NextResponse, NextRequest} from 'next/server'
 
 // OpenAI API
-const { Configuration, OpenAIApi } = require('openai')
+const {Configuration, OpenAIApi} = require('openai')
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_TOKEN,
 })
@@ -9,13 +9,14 @@ const openai = new OpenAIApi(configuration)
 
 // POST /api/chat
 export async function POST(req) {
-  const chunks = [];
+  const chunks = []
   for await (const chunk of req.body) {
-    chunks.push(chunk);
+    chunks.push(chunk)
   }
 
   // Parsing the body of the request
-  const messages = JSON.parse(Buffer.concat(chunks).toString());
+  const body = JSON.parse(Buffer.concat(chunks).toString())
+  const messages = body.messages
 
   // Body is of array of objects of the form {role: "assistant", message: "value"}
   const completion = await openai.createChatCompletion({
@@ -23,5 +24,7 @@ export async function POST(req) {
     messages: messages,
   })
 
-  return NextResponse.json({ body: completion.data.choices[0].message.content });
+  const reply = completion.data.choices[0].message.content
+
+  return NextResponse.json({role: 'assistant', content: reply})
 }

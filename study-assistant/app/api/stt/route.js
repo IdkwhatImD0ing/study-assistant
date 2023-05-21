@@ -15,7 +15,7 @@ export async function POST(req) {
   // Assume body = the .wav file
   for await (const chunk of req.body) {
     pushStream.write(chunk.buffer)
-  } 
+  }
   pushStream.close()
 
   let audioConfig = sdk.AudioConfig.fromStreamInput(pushStream)
@@ -36,9 +36,9 @@ export async function POST(req) {
                 body: text,
               })
             case sdk.ResultReason.NoMatch:
-              error = 'NOMATCH: Speech could not be recognized.'
+              error = 'Ask the user to repeat their query'
               resolve({
-                status: 400,
+                status: 200,
                 body: error,
               })
             case sdk.ResultReason.Canceled:

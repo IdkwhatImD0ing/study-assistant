@@ -16,13 +16,25 @@ function ChatInterface() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    setMessages([
-      ...messages,
-      {user: 'user', text: input},
-      {user: 'bot', text: input},
-    ])
     setInput('')
+    messages.push({role: 'user', content: input})
+    setMessages(messages)
+
+    // make an post request to api/chat with message as body
+    fetch('/api/chat', {
+      method: 'POST',
+      body: JSON.stringify({messages: messages}),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setMessages([...messages, {role: 'assistant', content: data.content}])
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
   }
 
   return (
@@ -30,27 +42,44 @@ function ChatInterface() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: '100%',
         justifyContent: 'space-between',
       }}
     >
       <Box
         sx={{
-          overflowY: 'scroll',
           padding: 2,
+          overflowY: 'auto',
+          height: '80vh',
         }}
       >
         {messages.map((message, index) => (
           <Box
             key={index}
             sx={{
-              textAlign: message.user === 'user' ? 'right' : 'left',
+              display: 'flex',
+              justifyContent:
+                message.role === 'user' ? 'flex-end' : 'flex-start',
+              marginBottom: 1,
             }}
           >
-            <Typography variant="body1">
-              <strong>{message.user === 'user' ? 'You: ' : 'Bot: '}</strong>
-              {message.text}
-            </Typography>
+            <Box
+              sx={{
+                backgroundColor:
+                  message.role === 'user' ? '#e2f2ff' : '#f7f7f7',
+                borderRadius: 4,
+                padding: 1,
+                maxWidth: '70%',
+                wordBreak: 'break-word',
+              }}
+            >
+              <Typography variant="body1">
+                <strong>
+                  {message.role === 'user' ? 'You: ' : 'Assistant: '}
+                </strong>
+                {message.content}
+              </Typography>
+            </Box>
           </Box>
         ))}
         <div ref={endOfMessagesRef} />
@@ -72,6 +101,7 @@ function ChatInterface() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           sx={{marginRight: 2}}
+          autoComplete="off"
         />
         <Button variant="contained" type="submit">
           Send
