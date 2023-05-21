@@ -19,7 +19,7 @@ const Input = styled('input')({
 
 export default function Pdf() {
   const [file, setFile] = useState()
-  const [extractedText, setExtractedText] = useState('')
+  const [extractedText, setExtractedText] = useState([])
   const [loading, setLoading] = useState(false)
 
   const handleFileChange = (event) => {
@@ -44,6 +44,11 @@ export default function Pdf() {
 
       if (response.ok) {
         const text = await response.text()
+        // Split into array of strings of size 4000 characters
+        const chunks = []
+        for (let i = 0; i < text.length; i += 4000) {
+          chunks.push(text.substring(i, i + 4000))
+        }
         setExtractedText(text)
       } else {
         throw new Error('Failed to extract text')

@@ -6,6 +6,10 @@ import {saveAs} from 'file-saver'
 let RecordRTC
 import {Mic, MicOff} from '@mui/icons-material'
 
+const Input = styled('input')({
+  display: 'none',
+})
+
 function ChatInterface() {
   const [messages, setMessages] = useState([])
   const [recording, setRecording] = useState(false)
@@ -13,6 +17,89 @@ function ChatInterface() {
   const recorder = useRef(null)
   const microphone = useRef(null)
   const endOfMessagesRef = useRef(null)
+
+  // PDF
+  const uuid = useRef(null)
+  const [pdfParsed, setPdfParsed] = useState(false)
+  const [file, setFile] = useState()
+  const [loadingPDF, setLoadingPDF] = useState(false)
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0])
+  }
+
+  const extractText = async () => {
+    setLoadingPDF(true)
+    setExtractedText('')
+    if (!file) {
+      return
+    }
+
+    try {
+      const formData = new FormData()
+      formData.append('pdf', file)
+
+      const response = await fetch('http://localhost:3001/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        const text = await response.text()
+        // Split into array of strings of size 4000 characters
+        const chunks = []
+        for (let i = 0; i < text.length; i += 4000) {
+          chunks.push(text.substring(i, i + 4000))
+        }
+        const temp = {
+          userUUID: 'temp',
+          contenxts: chunks,
+        }
+        const response = await fetch('/api/database', {
+          method: 'PUT',
+          body: JSON.stringify(temp),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.body === 'Success') {
+              setPdfParsed(true)
+              setLoadingPDF(false)
+            }
+          })
+      } else {
+        throw new Error('Failed to extract text')
+      }
+    } catch (error) {
+      console.error(error)
+      setExtractedText('Error occurred during text extraction')
+    }
+  }
+  //END PDF
+
+  //Delete Database on refresh or exit
+  useEffect(() => {
+    const handleUnload = async (event) => {
+      event.preventDefault()
+
+      fetch('/api/database', {
+        method: 'PATCH',
+        body: JSON.stringify({userUUID: 'temp'}),
+        keepalive: true,
+      })
+
+      event.returnValue = ''
+    }
+
+    window.addEventListener('unload', handleUnload)
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('unload', handleUnload)
+    }
+  }, []) // Empty dependency array means this effect runs once on mount and cleanup on unmount
 
   useEffect(() => {
     import('recordrtc').then((r) => {
@@ -61,7 +148,7 @@ function ChatInterface() {
         for (let i = 0; i < messages.length; i++) {
           temp.push({role: messages[i].role, content: messages[i].content})
         }
-        temp.push({role: 'user', content: data.body})
+
         setMessages([
           ...messages,
           {
@@ -71,9 +158,13 @@ function ChatInterface() {
           },
         ])
 
-        fetch('/api/chat', {
+        fetch('/api/database', {
           method: 'POST',
-          body: JSON.stringify({messages: temp}),
+          body: JSON.stringify({
+            userUUID: 'temp',
+            query: data.body,
+            conversation: temp,
+          }),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -144,6 +235,47 @@ function ChatInterface() {
   }
 
   useEffect(scrollToBottom, [messages])
+
+  if (!pdfParsed) {
+    return (
+      <Container>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+            marginTop: 5,
+            overflow: 'auto',
+            minHeight: '100vh',
+          }}
+        >
+          <Typography variant="h2" gutterBottom>
+            PDF Text Extractor
+          </Typography>
+          <label htmlFor="contained-button-file">
+            <Input
+              accept="application/pdf"
+              id="contained-button-file"
+              type="file"
+              onChange={handleFileChange}
+            />
+            <Button variant="outlined" component="span">
+              Upload PDF
+            </Button>
+          </label>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={extractText}
+            disabled={!file || loading}
+          >
+            {loading ? <CircularProgress size={24} /> : 'Extract Text'}
+          </Button>
+        </Box>
+      </Container>
+    )
+  }
 
   return (
     <Box

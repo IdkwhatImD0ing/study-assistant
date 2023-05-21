@@ -105,7 +105,9 @@ export async function POST(req) {
       messages: updatedConversation,
     })
 
-    return NextResponse.json({body: completion.data.choices[0].message.content})
+    const reply = completion.data.choices[0].message.content
+
+    return NextResponse.json({role: 'assistant', content: reply})
   } catch (err) {
     console.log(err)
     return new NextResponse({
