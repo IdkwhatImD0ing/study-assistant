@@ -227,3 +227,9 @@
     transform: rotate(0deg);
   }
 }
+
+*{
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+}

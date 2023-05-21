@@ -152,13 +152,31 @@ function ChatInterface() {
         flexDirection: 'column',
         height: '100%',
         justifyContent: 'space-between',
+        overflow: 'hidden',
       }}
     >
+      <Box
+        component="img"
+        src="background.png"
+        sx={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+          top: 0,
+          left: 0,
+        }}
+      />
       <Box
         sx={{
           padding: 2,
           overflowY: 'auto',
           height: '80vh',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          scrollbarWidth: 'none',
         }}
       >
         {messages.map((message, index) => (
@@ -184,18 +202,23 @@ function ChatInterface() {
         <div ref={endOfMessagesRef} />
       </Box>
       <Box
+        component="form"
         sx={{
-          padding: 2,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '100%',
           borderTop: 1,
-          borderColor: 'divider',
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
+          backgroundColor: 'rgba(255,255,255,0.2)',
         }}
       >
         <Button
           variant="contained"
           onClick={recording ? stopRecording : startRecording}
-          sx={{marginRight: 2, padding: 2}}
+          sx={{backgroundColor: '#4f8cff', m: 3}}
         >
           {recording ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
         </Button>

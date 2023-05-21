@@ -70,3 +70,4 @@ For further backend links and environmental variables, please contact us.
 - Customization and Training: We'll customize the Chat GPT model to meet our project's objectives, emphasizing a safe and supportive environment.
 - User Feedback and Iteration: Collecting user feedback to enhance the system and improve user experiences.
 - Features: Allow uploading more than one pdf at a time, audio streaming to ensure faster responses
+- Bugs: Fix known bugs such as over context limit, and improve the UI/UX

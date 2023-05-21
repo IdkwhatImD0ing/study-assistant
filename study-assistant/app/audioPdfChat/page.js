@@ -46,10 +46,13 @@ function ChatInterface() {
       const formData = new FormData()
       formData.append('pdf', file)
 
-      const response = await fetch('http://localhost:3001/upload', {
-        method: 'POST',
-        body: formData,
-      })
+      const response = await fetch(
+        'https://intelliconverse.azurewebsites.net/upload',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      )
 
       if (response.ok) {
         const text = await response.text()
@@ -292,8 +295,22 @@ function ChatInterface() {
             minHeight: '100vh',
           }}
         >
+          <Box
+            component="img"
+            src="background.png"
+            sx={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: -1,
+              top: 0,
+              left: 0,
+            }}
+          />
+
           <Typography variant="h2" gutterBottom>
-            PDF Text Extractor
+            Let's Index your PDF!
           </Typography>
           <label htmlFor="contained-button-file">
             <Input
@@ -319,13 +336,31 @@ function ChatInterface() {
         flexDirection: 'column',
         height: '100%',
         justifyContent: 'space-between',
+        overflow: 'hidden',
       }}
     >
+      <Box
+        component="img"
+        src="background.png"
+        sx={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+          top: 0,
+          left: 0,
+        }}
+      />
       <Box
         sx={{
           padding: 2,
           overflowY: 'auto',
           height: '80vh',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          scrollbarWidth: 'none',
         }}
       >
         {messages.map((message, index) => (
@@ -342,6 +377,15 @@ function ChatInterface() {
               onClick={() => {
                 new Audio(message.audioURL).play()
               }}
+              sx={{
+                backgroundColor:
+                  message.role === 'user' ? '#e2f2ff' : '#f7f7f7',
+                borderRadius: 4,
+                padding: 1,
+                maxWidth: '70%',
+                wordBreak: 'break-word',
+                mr: 5,
+              }}
             >
               {message.role === 'user' ? 'You: ' : 'Assistant: '}
             </Button>
@@ -353,19 +397,24 @@ function ChatInterface() {
         <div ref={endOfMessagesRef} />
       </Box>
       <Box
+        component="form"
         sx={{
-          padding: 2,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '100%',
           borderTop: 1,
-          borderColor: 'divider',
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
+          backgroundColor: 'rgba(255,255,255,0.2)',
         }}
       >
         <Button
           variant="contained"
           onClick={recording ? stopRecording : startRecording}
-          sx={{marginRight: 2, padding: 2}}
-          disabled={assistantThinking} // Disable the button when the assistant is thinking
+          sx={{backgroundColor: '#4f8cff', m: 3}}
+          disabled={assistantThinking}
         >
           {recording ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
         </Button>

@@ -1,8 +1,8 @@
-"use client";
-import { useState, useRef, useEffect } from "react";
-import { useAudio } from "react-use";
-let RecordRTC;
-import { saveAs } from "file-saver";
+'use client'
+import {useState, useRef, useEffect} from 'react'
+import {useAudio} from 'react-use'
+let RecordRTC
+import {saveAs} from 'file-saver'
 import {
   Button,
   Box,
@@ -11,7 +11,7 @@ import {
   Stack,
   Typography,
   Input,
-} from "@mui/material";
+} from '@mui/material'
 import {
   PlayCircleOutline,
   PauseCircleOutline,
@@ -19,126 +19,128 @@ import {
   MicOff,
   Download,
   CloudUpload,
-} from "@mui/icons-material";
+} from '@mui/icons-material'
 
 function AudioRecorder() {
-  const [audioData, setAudioData] = useState(null);
-  const [recording, setRecording] = useState(false);
-  const [audioURL, setAudioURL] = useState("");
-  const [responseBody, setResponseBody] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
-  const recorder = useRef(null);
-  const microphone = useRef(null);
+  const [audioData, setAudioData] = useState(null)
+  const [recording, setRecording] = useState(false)
+  const [audioURL, setAudioURL] = useState('')
+  const [responseBody, setResponseBody] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const recorder = useRef(null)
+  const microphone = useRef(null)
 
-  const fileInputRef = useRef();
+  const fileInputRef = useRef()
 
   const triggerFileSelect = () => {
-    fileInputRef.current.click();
-  };
+    fileInputRef.current.click()
+  }
 
   useEffect(() => {
-    import("recordrtc").then((r) => {
-      RecordRTC = r.default;
-    });
-  }, []);
+    import('recordrtc').then((r) => {
+      RecordRTC = r.default
+    })
+  }, [])
 
   const [audio, state, controls] = useAudio({
     src: audioURL,
     autoPlay: false,
-  });
+  })
 
   const captureMicrophone = async (callback) => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      callback(stream);
+      const stream = await navigator.mediaDevices.getUserMedia({audio: true})
+      callback(stream)
     } catch (error) {
-      alert("Unable to access your microphone.");
-      console.error(error);
+      alert('Unable to access your microphone.')
+      console.error(error)
     }
-  };
+  }
 
   const stopRecordingCallback = () => {
-    const audioBlob = recorder.current.getBlob();
-    setAudioData(audioBlob);
-    const audioURL = URL.createObjectURL(audioBlob);
-    setAudioURL(audioURL);
+    const audioBlob = recorder.current.getBlob()
+    setAudioData(audioBlob)
+    const audioURL = URL.createObjectURL(audioBlob)
+    setAudioURL(audioURL)
 
-    recorder.current.microphone.stop();
-    setRecording(false);
-  };
+    recorder.current.microphone.stop()
+    setRecording(false)
+  }
 
   const startRecording = async () => {
     await captureMicrophone((stream) => {
-      microphone.current = stream;
+      microphone.current = stream
 
       const options = {
-        type: "audio",
+        type: 'audio',
         recorderType: RecordRTC.StereoAudioRecorder,
         desiredSampRate: 16000,
         numberOfAudioChannels: 1,
-      };
+      }
 
-      recorder.current = RecordRTC(stream, options);
-      recorder.current.startRecording();
-      recorder.current.microphone = microphone.current;
+      recorder.current = RecordRTC(stream, options)
+      recorder.current.startRecording()
+      recorder.current.microphone = microphone.current
 
-      setRecording(true);
-    });
-  };
+      setRecording(true)
+    })
+  }
 
   const stopRecording = () => {
     if (recorder.current) {
-      recorder.current.stopRecording(stopRecordingCallback);
+      recorder.current.stopRecording(stopRecordingCallback)
     }
-  };
+  }
 
   const handleSubmit = async () => {
-    setSubmitting(true);
+    setSubmitting(true)
 
     // Send audio to /api/stt
     try {
-      const response = await fetch("/api/stt", {
-        method: "POST",
+      const response = await fetch('/api/stt', {
+        method: 'POST',
         headers: {
-          "Content-Type": "audio/wav",
+          'Content-Type': 'audio/wav',
         },
         body: audioData,
-      });
+      })
 
-      const responseData = await response.json();
-      setResponseBody(responseData.body);
+      const responseData = await response.json()
+      setResponseBody(responseData.body)
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error)
     }
 
-    setSubmitting(false);
-  };
+    setSubmitting(false)
+  }
 
   const downloadRecording = () => {
     if (audioData) {
-      saveAs(audioData, "recording.wav");
+      saveAs(audioData, 'recording.wav')
     }
-  };
+  }
 
   const handleUpload = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]
     if (file) {
-      setAudioData(file);
-      const audioURL = URL.createObjectURL(file);
-      setAudioURL(audioURL);
+      setAudioData(file)
+      const audioURL = URL.createObjectURL(file)
+      setAudioURL(audioURL)
     }
-  };
+  }
   return (
     <Box
+      component="img"
+      src="background.png"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
         gap: 2,
-        padding: "20px",
-        backgroundColor: "#f5f5f5",
+        padding: '20px',
+        backgroundColor: '#f5f5f5',
       }}
     >
       <Button
@@ -146,9 +148,9 @@ function AudioRecorder() {
         color="primary"
         startIcon={recording ? <MicOff /> : <Mic />}
         onClick={recording ? stopRecording : startRecording}
-        sx={{ marginBottom: "20px" }}
+        sx={{marginBottom: '20px'}}
       >
-        {recording ? "Stop Recording" : "Start Recording"}
+        {recording ? 'Stop Recording' : 'Start Recording'}
       </Button>
       <Button
         variant="contained"
@@ -162,7 +164,7 @@ function AudioRecorder() {
         type="file"
         accept="audio/wav"
         onChange={handleUpload}
-        style={{ display: "none" }}
+        style={{display: 'none'}}
         ref={fileInputRef}
       />
       {audioData && (
@@ -180,7 +182,7 @@ function AudioRecorder() {
             aria-label="Volume"
             valueLabelDisplay="auto"
             sx={{
-              width: "200px",
+              width: '200px',
             }}
           />
 
@@ -214,7 +216,7 @@ function AudioRecorder() {
         </Box>
       )}
     </Box>
-  );
+  )
 }
 
-export default AudioRecorder;
+export default AudioRecorder
