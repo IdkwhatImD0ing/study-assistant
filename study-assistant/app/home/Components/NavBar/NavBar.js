@@ -1,21 +1,20 @@
-import { useState } from "react";
-import Link from "next/link";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import AppBar from "@mui/material/AppBar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import Icon from "@mui/material/Icon";
-import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AdbIcon from "@mui/icons-material/Adb";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { width } from "@mui/system";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import Link from "next/link";
+import { useState } from "react";
 
 const pages = ["Home", "Chat", "About"];
 
@@ -37,11 +36,11 @@ export default function Navbar(props) {
 
   return (
     <Box sx={{
-        position: "relative",
-        width: "100%",
-        height: "10vh",
-        overflow: "hidden",
-      }}>
+      position: "relative",
+      width: "100%",
+      height: "10vh",
+      overflow: "hidden",
+    }}>
       <AppBar
         position="sticky"
         sx={{
@@ -74,7 +73,7 @@ export default function Navbar(props) {
           Study Buddy
         </Typography>
         {pages.map((page) => (
-          <Link href={`/${page.toLowerCase()}`}>
+          <Link key={page.toLowerCase()} href={`/${page.toLowerCase()}`}>
             <Button
               variant="text"
               sx={{
