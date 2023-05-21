@@ -10,6 +10,7 @@ import {
   Slider,
   Stack,
   Typography,
+  Input,
 } from "@mui/material";
 import {
   PlayCircleOutline,
@@ -28,6 +29,12 @@ function AudioRecorder() {
   const [submitting, setSubmitting] = useState(false);
   const recorder = useRef(null);
   const microphone = useRef(null);
+
+  const fileInputRef = useRef();
+
+  const triggerFileSelect = () => {
+    fileInputRef.current.click();
+  };
 
   useEffect(() => {
     import("recordrtc").then((r) => {
@@ -130,17 +137,34 @@ function AudioRecorder() {
         justifyContent: "center",
         minHeight: "100vh",
         gap: 2,
+        padding: "20px",
+        backgroundColor: "#f5f5f5",
       }}
     >
       <Button
         variant="outlined"
+        color="primary"
         startIcon={recording ? <MicOff /> : <Mic />}
         onClick={recording ? stopRecording : startRecording}
+        sx={{ marginBottom: "20px" }}
       >
         {recording ? "Stop Recording" : "Start Recording"}
       </Button>
-      <input type="file" accept="audio/wav" onChange={handleUpload} />
-
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={triggerFileSelect}
+        startIcon={<CloudUpload />}
+      >
+        Choose file
+      </Button>
+      <Input
+        type="file"
+        accept="audio/wav"
+        onChange={handleUpload}
+        style={{ display: "none" }}
+        ref={fileInputRef}
+      />
       {audioData && (
         <Stack direction="row" spacing={2} alignItems="center">
           <IconButton onClick={state.paused ? controls.play : controls.pause}>
