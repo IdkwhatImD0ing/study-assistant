@@ -56,13 +56,25 @@ function ChatInterface() {
           <Box
             key={index}
             sx={{
-              textAlign: message.role === 'user' ? 'right' : 'left',
+              display: 'flex',
+              justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
+              marginBottom: 1,
             }}
           >
-            <Typography variant="body1">
-              <strong>{message.role === 'user' ? 'You: ' : 'assistant: '}</strong>
-              {message.content}
-            </Typography>
+            <Box
+              sx={{
+                backgroundColor: message.role === 'user' ? '#e2f2ff' : '#f7f7f7',
+                borderRadius: 4,
+                padding: 1,
+                maxWidth: '70%',
+                wordBreak: 'break-word',
+              }}
+            >
+              <Typography variant="body1">
+                <strong>{message.role === 'user' ? 'You: ' : 'Assistant: '}</strong>
+                {message.content}
+              </Typography>
+            </Box>
           </Box>
         ))}
         <div ref={endOfMessagesRef} />
