@@ -3,6 +3,7 @@ Our project aims to address the challenges faced by individuals with learning di
 
 To overcome these challenges, we have developed a program that leverages Chat-GPT, a powerful language model, to provide comprehensive and accessible answers to questions. The program accommodates both typed and spoken inputs, allowing users to interact with the system in a way that suits their preferences and abilities.
 Targeting the main group of people with learning disabilities, our solution enables them to receive text and speech outputs that effectively address their queries and provide the information they need. Additionally, we recognize the potential of our program to support individuals with mental health concerns. By offering a platform for expressing emotions, whether through typed or spoken input, our solution aims to provide a supportive and inclusive environment for individuals dealing with mental health challenges.
+
 Overall, our program seeks to enhance accessibility, promote effective communication, and empower individuals with learning disabilities and mental health issues to overcome their unique challenges.
 
 ## How we built it:
