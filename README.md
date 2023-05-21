@@ -22,4 +22,9 @@ Overcoming these challenges required careful debugging, troubleshooting, and fin
 ## What we learned
 	Cont…
 ## What’s next
-	Cont…
+- Customization and Training: We'll customize the Chat GPT model to meet our project's objectives, emphasizing a safe and supportive environment.
+- Safety Measures: Robust safety measures will be implemented, including human moderation, filters, and AI techniques to handle sensitive content.
+- User Feedback and Iteration: Collecting user feedback to enhance the system and improve user experiences.
+- Collaboration and Partnerships: Collaborating with experts and organizations to gain insights and expand our impact.
+- Research and Innovation: Staying updated with NLP advancements and AI ethics for continuous improvement.
+- Expansion and Outreach: Exploring opportunities to reach a wider audience through partnerships and outreach efforts.
