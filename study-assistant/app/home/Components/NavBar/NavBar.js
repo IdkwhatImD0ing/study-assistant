@@ -16,7 +16,7 @@ import Settings from "@mui/icons-material/Settings";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonIcon from '@mui/icons-material/Person';
 
-const pages = ["Home", "Chat", "AudioChat", "Pdf", "About"];
+const pages = ["home", "chat", "audioChat", "pdf", "about"];
 
 export default function Navbar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -70,10 +70,10 @@ export default function Navbar(props) {
             fontSize: "2em",
           }}
         >
-          Study Buddy
+          IntelliConverse
         </Typography>
         {pages.map((page) => (
-          <Link href={`/${page.toLowerCase()}`}>
+          <Link href={`/${page}`}>
             <Button
               variant="text"
               sx={{

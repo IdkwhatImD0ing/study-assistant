@@ -39,7 +39,7 @@ export default function Homepage() {
             color: "white",
           }}
         >
-          Hello, World!
+          Welcome!
         </Typography>
         <Typography
           variant="h4"
@@ -51,12 +51,12 @@ export default function Homepage() {
             color: "white",
           }}
         >
-          An audio study pal for students, by students.
+          An AI study pal for students, by students.
         </Typography>
         <Button
           variant="contained"
-          color = "primary"
-          size = "large"
+          color="primary"
+          size="large"
           href="/chat"
           sx={{
             position: "absolute",

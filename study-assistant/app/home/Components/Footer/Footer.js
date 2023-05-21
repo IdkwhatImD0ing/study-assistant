@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import AdbIcon from "@mui/icons-material/Adb";
 
-const pages = ["Home", "Chat", "Pdf", "About"];
+const pages = ["home", "chat", "audioChat", "pdf", "about"];
 
 export default function Footer(props) {
   return (

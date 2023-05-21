@@ -3,110 +3,71 @@
 import Navbar from "../home/Components/NavBar/NavBar";
 import Footer from "../home/Components/Footer/Footer";
 import { useState } from "react";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import FaceIcon from '@mui/icons-material/Face';
+import { Avatar, Grid, Box } from '@mui/material';
 
-const names = ["Bill", "Sophia", "Varuun", "Ryan"];
-const desc = ["YESYESYESYESYESYES", "YESYESYESYESYESYESYESYESYES", "YESYESYESYESYESYESYESYESYES", "YESYESYESYESYESYESYESYESYES"];
+const teamMembers = [
+  {
+    name: 'John Doe',
+    role: 'CEO',
+    avatar: 'https://example.com/avatar1.png',
+  },
+  {
+    name: 'Jane Smith',
+    role: 'CTO',
+    avatar: 'https://example.com/avatar2.png',
+  },
+  {
+    name: 'John Doe',
+    role: 'CEO',
+    avatar: 'https://example.com/avatar1.png',
+  },
+  {
+    name: 'Jane Smith',
+    role: 'CTO',
+    avatar: 'https://example.com/avatar2.png',
+  },
+];
 
 export default function AboutPage() {
-  const [descIndex, setDescIndex] = useState(0);
-
   return (
-    <section className="about">
+    <section className="about" >
       <Navbar />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          height: "100vh",
-          wrap: "nowrap",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "30%",
-            height: "100%",
-            backgroundColor: "beige",
-            gap: "2em",
-          }}
-        >
-          <Typography
-            variant="h3"
-            sx={{
-              color: "black",
-              textAlign: "center",
-              mt: "1em",
-              fontWeight: "bold",
-            }}
-          >
-            Makers
-          </Typography>
-          {names.map((name, index) => (
-            <IconButton
-              onClick={() => setDescIndex(index)}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <FaceIcon sx={{ color: "blue", fontSize: "5em" }} />
-              <Typography variant="h5" sx={{ color: "black" }}>
-                {name}
+      <Box my={4} />
+      <Box display="flex" justifyContent="center" flexDirection="column" alignItems="center">
+        <Typography variant="h4" align="center" gutterBottom>
+          About
+        </Typography>
+        <Typography variant="body1" maxWidth="sm" style={{ textAlign: 'center' }}>
+          body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+          blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur,
+          neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum
+          quasi quidem quibusdam.
+        </Typography>
+      </Box>
+      <Box my={10} />
+      <Typography variant="h5" align="center">
+        The team
+      </Typography>
+      <Box my={4} />
+      <Grid container spacing={8} justifyContent="center">
+        {teamMembers.map((member, index) => (
+          <Grid item key={index} alignItems="center" justifyContent="center" direction="column">
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Avatar alt={member.name} src={member.avatar} sx={{ width: 96, height: 96, mb: 1 }} />
+              <Typography variant="subtitle1" style={{ textAlign: 'center' }}>
+                {member.name}
               </Typography>
-            </IconButton>
-          ))}
-        </Box>
-        <Box
-          sx={{
-            width: "70%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            outline: "3px solid #636363",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              height: "100%",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyItems: "center",
-            }}
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                color: "black",
-                textAlign: "center",
-                mt: "1em",
-                fontWeight: "bold",
-              }}
-            >
-              About Us!
-            </Typography>
-            <Box sx={{
-                display: "flex",
-                flexDirection: "column", 
-                height: "100%",
-                justifyContent: "center",
-
-            }}>
-              <Typography variant="h4" sx={{ color: "black", width: "50%", height: "50%", }}>
-                {desc[descIndex]}
+              <Typography variant="caption" style={{ textAlign: 'center' }}>
+                {member.role}
               </Typography>
             </Box>
-          </Box>
-        </Box>
-      </Box>
+          </Grid>
+        ))}
+      </Grid>
+      <Box my={8} />
       <Footer />
     </section>
   );
