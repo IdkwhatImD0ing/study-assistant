@@ -1,19 +1,15 @@
 'use client'
 
 import {useState, useEffect, useRef} from 'react'
-import {Box, TextField, Button, Typography} from '@mui/material'
+import {Box, Button, CircularProgress} from '@mui/material'
 import {saveAs} from 'file-saver'
 let RecordRTC
-import {
-  Mic,
-  MicOff,
-  PlayCircleOutline,
-  PauseCircleOutline,
-} from '@mui/icons-material'
+import {Mic, MicOff} from '@mui/icons-material'
 
 function ChatInterface() {
   const [messages, setMessages] = useState([])
   const [recording, setRecording] = useState(false)
+  const [loading, setLoading] = useState(false)
   const recorder = useRef(null)
   const microphone = useRef(null)
   const endOfMessagesRef = useRef(null)
@@ -25,7 +21,7 @@ function ChatInterface() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [recording]) // add recording as dependency
+  }, [recording])
 
   const handleKeyDown = (event) => {
     if (event.code === 'Space') {
@@ -50,8 +46,8 @@ function ChatInterface() {
   const stopRecordingCallback = () => {
     const audioBlob = recorder.current.getBlob()
     setRecording(false)
+    setLoading(true)
 
-    // Send audio to /api/stt
     fetch('/api/stt', {
       method: 'POST',
       headers: {
@@ -61,13 +57,10 @@ function ChatInterface() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.body)
-        // Make a local copy of messages but only role and content
         const temp = []
         for (let i = 0; i < messages.length; i++) {
           temp.push({role: messages[i].role, content: messages[i].content})
         }
-        // Add user message to messages
         temp.push({role: 'user', content: data.body})
         setMessages([
           ...messages,
@@ -77,7 +70,7 @@ function ChatInterface() {
             audioURL: URL.createObjectURL(audioBlob),
           },
         ])
-        // Send text to /api/chat
+
         fetch('/api/chat', {
           method: 'POST',
           body: JSON.stringify({messages: temp}),
@@ -87,7 +80,6 @@ function ChatInterface() {
         })
           .then((response) => response.json())
           .then((data) => {
-            // Send text to /api/tts
             fetch('/api/tts', {
               method: 'POST',
               headers: {
@@ -100,7 +92,6 @@ function ChatInterface() {
                 const newAudioURL = URL.createObjectURL(audioBlob)
                 setMessages((prevMessages) => {
                   const newMessages = [...prevMessages]
-                  // Add assistant message.
                   newMessages.push({
                     role: 'assistant',
                     content: data.content,
@@ -108,9 +99,9 @@ function ChatInterface() {
                   })
                   return newMessages
                 })
-                // Auto-play assistant's speech response
                 const audio = new Audio(newAudioURL)
                 audio.play()
+                setLoading(false)
               })
           })
       })
@@ -123,7 +114,6 @@ function ChatInterface() {
 
   const startRecording = async () => {
     if (!recording) {
-      // prevent starting another recording
       await captureMicrophone((stream) => {
         microphone.current = stream
 
@@ -181,15 +171,14 @@ function ChatInterface() {
               marginBottom: 1,
             }}
           >
-            {message.audioURL && (
-              <Button
-                onClick={() => {
-                  new Audio(message.audioURL).play()
-                }}
-              >
-                {message.role === 'user' ? 'You: ' : 'Assistant: '}
-              </Button>
-            )}
+            <Button
+              onClick={() => {
+                new Audio(message.audioURL).play()
+              }}
+            >
+              {message.role === 'user' ? 'You: ' : 'Assistant: '}
+            </Button>
+            {loading && message.role === 'assistant' && <CircularProgress />}
           </Box>
         ))}
         <div ref={endOfMessagesRef} />
@@ -200,15 +189,15 @@ function ChatInterface() {
           borderTop: 1,
           borderColor: 'divider',
           display: 'flex',
-          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         <Button
           variant="contained"
           onClick={recording ? stopRecording : startRecording}
-          sx={{marginRight: 2}}
+          sx={{marginRight: 2, padding: 2}}
         >
-          {recording ? <MicOff /> : <Mic />}
+          {recording ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
         </Button>
       </Box>
     </Box>

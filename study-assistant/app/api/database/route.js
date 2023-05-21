@@ -87,12 +87,18 @@ export async function POST(req) {
     // Get the contents of the file
     const files = await Speech.findOne({_id: userUUID})
     const filesMap = new Map(files.files.entries())
-    const file = filesMap.get(fileUUID).contents
+    const fileArray = []
+    fileUUID.forEach((id) => {
+      if (filesMap.has(id.id)) {
+        fileArray.push(filesMap.get(id.id).contents)
+      }
+    })
+    const file = fileArray.join('\n\n')
 
     // Create the message
     const message = {
       role: 'user',
-      content: `Answer the following question:\n${data.query}\nThe following information maybe useful, if it isn't useful, don't mention it and answer to the best of your ability\n${file}`,
+      content: `Answer the following question:\n${data.query}\nThe following information may be useful, if it isn't useful, don't mention it and answer to the best of your ability\n\n${file}`,
     }
 
     // Add the message to the conversation
@@ -105,7 +111,9 @@ export async function POST(req) {
       messages: updatedConversation,
     })
 
-    return NextResponse.json({body: completion.data.choices[0].message.content})
+    const reply = completion.data.choices[0].message.content
+
+    return NextResponse.json({role: 'assistant', content: reply})
   } catch (err) {
     console.log(err)
     return new NextResponse({
@@ -144,13 +152,10 @@ export async function PATCH(req) {
     const fileUUIDs = []
     if (speech) {
       const files = speech.files
-      console.log(speech)
       for (const [key, value] of files.entries()) {
         fileUUIDs.push(value._id)
       }
     }
-
-    console.log(fileUUIDs)
 
     // Format the fileUUIDs for the deleteEntities expression
     const expr = `fileUUID in [${fileUUIDs.map((id) => `"${id}"`).join(', ')}]`
