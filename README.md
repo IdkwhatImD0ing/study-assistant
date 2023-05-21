@@ -1,30 +1,43 @@
 # IntelliConverse
 
+
+
+
 ## Overview
 
 IntelliConverse is a project using Chat-GPT to assist individuals with learning disabilities (like dyslexia and ADHD) and reading difficulties. Our solution offers comprehensive answers through typed and spoken inputs/outputs, fostering effective communication and empowering users to overcome challenges.
 
 ## Table of Contents
-
 - [IntelliConverse](#intelliconverse)
 	- [Overview](#overview)
 	- [Table of Contents](#table-of-contents)
 	- [Backend Development Approach](#backend-development-approach)
 	- [Frontend Development Approach](#frontend-development-approach)
-	- [Challenges](#challenges)
-	- [Accomplishments](#accomplishments)
-	- [What We Learned](#what-we-learned)
-	- [What's Next](#whats-next)
 	- [How to run](#how-to-run)
+	- [Things that challenged us:](#things-that-challenged-us)
+	- [Accomplishments](#accomplishments)
+	- [What we learned](#what-we-learned)
+	- [What’s next](#whats-next)
 
-### Backend Development Approach
-The backend is developed using an API route with OpenAPI and Chat-GPT for conversational capabilities. We integrated text-to-speech (TTS) and speech-to-text (STT) features with React, Next.js, and Microsoft Cloud services, and used MongoDB for data storage.
+## Backend Development Approach
+ - Custom NextJS server as well as Express Server
+ - Routes:
+   - Speech to text
+   - Text to speech
+   - Adding Data to Milvus and MongoDB
+   - Querying Milvus and MongoDB
+   - Removing Data from Milvus and MongoDB
+   - Chat GPT
 
-### Frontend Development Approach
-We employed websockets for real-time communication on the frontend and used Material UI to create a user-friendly interface.
 
-## Challenges
-We faced challenges while testing the Azure Speech to Text backend route and ensuring the reliability of the speech-to-text conversion. Capturing and recording audio on the frontend that met Azure Speech to Text specifications was another major challenge we tackled.
+## Frontend Development Approach
+ - NextJS with Material UI
+ - Implemented three chat interfaces
+   - Regular chat
+   - Voice chat
+   - Voice chat with PDF
+ - Voice chat with pdf allows the assistant to answer your questions with references from the pdf
+
 
 ## How to run
 
@@ -46,13 +59,14 @@ For further backend links and environmental variables, please contact us.
 -	Recording Frontend Audio for Azure Speech to Text: Achieving high-quality audio and format compatibility was difficult but essential for accurate transcription. Overcoming these challenges involved debugging, troubleshooting, and fine-tuning the recording and conversion processes to ensure seamless integration and reliable performance.
 
 ## Accomplishments
-Our achievements include impressive developments in text-to-speech and speech-to-text capabilities, alongside overcoming challenging debugging tasks. These efforts resulted in a highly satisfactory and capable system, enabling seamless conversion between spoken and written communication for an inclusive and accessible user experience.
+ - Really happy that we managed to successfully implement both the text to speech and speech to text features
+ - Allows us to implement a voice chat functionality as well as a voice chat with pdf functionality
 
 ## What we learned
-We gained insights in audio capture, ensuring compatibility with Azure Speech to Text. Debugging and fine-tuning ensured seamless integration and reliable performance. We enhanced our skills in audio processing and frontend implementation for audio-based applications.
+ - We gained insights in audio capture, ensuring compatibility with Azure Speech to Text. Debugging and fine-tuning ensured seamless integration and reliable performance. 
+ - We enhanced our skills in audio processing and frontend implementation for audio-based applications.
 
 ## What’s next
 - Customization and Training: We'll customize the Chat GPT model to meet our project's objectives, emphasizing a safe and supportive environment.
-- Safety Measures: Robust safety measures will be implemented, including human moderation, filters, and AI techniques to handle sensitive content.
 - User Feedback and Iteration: Collecting user feedback to enhance the system and improve user experiences.
-- Expansion and Outreach: Exploring opportunities to reach a wider audience through partnerships and outreach efforts.
+- Features: Allow uploading more than one pdf at a time, audio streaming to ensure faster responses
