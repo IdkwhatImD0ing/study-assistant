@@ -150,6 +150,13 @@ function ChatInterface() {
     })
       .then((response) => response.json())
       .then((data) => {
+        // Clone of messages without audioURLs
+        const temp = []
+        for (let i = 0; i < messages.length; i++) {
+          temp.push({role: messages[i].role, content: messages[i].content})
+        }
+        temp.push({role: 'user', content: data.body})
+
         const userMessage = {
           role: 'user',
           content: data.body,
@@ -167,7 +174,7 @@ function ChatInterface() {
           body: JSON.stringify({
             userUUID: uuid,
             query: data.body,
-            conversation: [...messages, userMessage], // We're not including the assistant placeholder here
+            conversation: temp,
           }),
           headers: {
             'Content-Type': 'application/json',

@@ -95,6 +95,8 @@ export async function POST(req) {
     })
     const file = fileArray.join('\n\n')
 
+    const string = ``
+
     // Create the message
     const message = {
       role: 'user',
@@ -124,7 +126,7 @@ export async function POST(req) {
 }
 
 // Delete request for deleting the database
-// DELETE /api/database
+// PATCH /api/database
 export async function PATCH(req) {
   // MongoDB Setup
   await connectDB(process.env.MONGODB_URL)
