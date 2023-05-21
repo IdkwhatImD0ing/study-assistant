@@ -8,7 +8,8 @@ import {
   Container,
   Typography,
 } from '@mui/material'
-import {saveAs} from 'file-saver'
+import {v4 as uuidv4} from 'uuid'
+
 let RecordRTC
 import {Mic, MicOff} from '@mui/icons-material'
 import {styled} from '@mui/system'
@@ -24,9 +25,9 @@ function ChatInterface() {
   const recorder = useRef(null)
   const microphone = useRef(null)
   const endOfMessagesRef = useRef(null)
+  const [uuid, setUUID] = useState(uuidv4())
 
   // PDF
-  const uuid = useRef(null)
   const [pdfParsed, setPdfParsed] = useState(false)
   const [file, setFile] = useState()
   const [loadingPDF, setLoadingPDF] = useState(false)
@@ -58,7 +59,7 @@ function ChatInterface() {
           chunks.push(text.substring(i, i + 4000))
         }
         const temp = {
-          userUUID: 'temp',
+          userUUID: uuid,
           contents: chunks,
         }
         fetch('/api/database', {
@@ -91,7 +92,7 @@ function ChatInterface() {
 
       fetch('/api/database', {
         method: 'PATCH',
-        body: JSON.stringify({userUUID: 'temp'}),
+        body: JSON.stringify({userUUID: uuid}),
         keepalive: true,
       })
 
@@ -164,7 +165,7 @@ function ChatInterface() {
         fetch('/api/database', {
           method: 'POST',
           body: JSON.stringify({
-            userUUID: 'temp',
+            userUUID: uuid,
             query: data.body,
             conversation: [...messages, userMessage], // We're not including the assistant placeholder here
           }),
