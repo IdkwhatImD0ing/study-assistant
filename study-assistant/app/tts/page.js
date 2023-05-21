@@ -1,47 +1,49 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
+import React, { useState } from "react";
+import { TextField, Button } from "@mui/material";
+import Navbar from "../Components/NavBar/NavBar";
+import Footer from "../Components/Footer/Footer";
 
 export default function MyForm() {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [audioData, setAudioData] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Perform submit logic here
-    console.log('Submitted:', inputValue);
+    console.log("Submitted:", inputValue);
     await fetchAudio(inputValue);
   };
 
   const fetchAudio = async (input) => {
     try {
-      const response = await fetch('/api/tts', {
-        method: 'POST',
+      const response = await fetch("/api/tts", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: input })
+        body: JSON.stringify({ text: input }),
       });
       if (response.ok) {
         const audioBlob = await response.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudioData(audioUrl);
       } else {
-        console.error('Error fetching audio');
+        console.error("Error fetching audio");
       }
     } catch (error) {
-      console.error('Error fetching audio:', error);
+      console.error("Error fetching audio:", error);
     }
   };
 
   const handlePlay = () => {
-    const audioElement = document.getElementById('audio-player');
+    const audioElement = document.getElementById("audio-player");
     audioElement.play();
   };
 
   const handlePause = () => {
-    const audioElement = document.getElementById('audio-player');
+    const audioElement = document.getElementById("audio-player");
     audioElement.pause();
   };
 
@@ -51,6 +53,7 @@ export default function MyForm() {
 
   return (
     <>
+      <Navbar />
       <form onSubmit={handleSubmit}>
         <TextField
           label="Input"
@@ -70,8 +73,7 @@ export default function MyForm() {
       <Button variant="contained" color="primary" onClick={handlePause}>
         Pause
       </Button>
+      <Footer />
     </>
   );
-};
-
-
+}

@@ -1,5 +1,7 @@
 'use client'
 
+import Navbar from './Components/NavBar/NavBar'
+import Footer from './Components/Footer/Footer'
 import {useState, useEffect, useRef} from 'react'
 import {
   Box,
@@ -284,143 +286,105 @@ function ChatInterface() {
 
   if (!pdfParsed) {
     return (
-      <Container>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 2,
-            marginTop: 5,
-            overflow: 'auto',
-            minHeight: '100vh',
-          }}
-        >
+      <section className="audioPdfChat">
+        <Navbar />
+        <Container>
           <Box
-            component="img"
-            src="background.png"
             sx={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              zIndex: -1,
-              top: 0,
-              left: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              marginTop: 5,
+              overflow: 'auto',
+              minHeight: '100vh',
             }}
-          />
-
-          <Typography variant="h2" gutterBottom>
-            Let&apos;s Index your PDF!
-          </Typography>
-          <label htmlFor="contained-button-file">
-            <Input
-              accept="application/pdf"
-              id="contained-button-file"
-              type="file"
-              onChange={handleFileChange}
-            />
-            <Button variant="outlined" component="span">
-              Upload PDF
-            </Button>
-          </label>
-          <ExtractButton />
-        </Box>
-      </Container>
+          >
+            <Typography variant="h2" gutterBottom>
+              PDF Text Extractor
+            </Typography>
+            <label htmlFor="contained-button-file">
+              <Input
+                accept="application/pdf"
+                id="contained-button-file"
+                type="file"
+                onChange={handleFileChange}
+              />
+              <Button variant="outlined" component="span">
+                Upload PDF
+              </Button>
+            </label>
+            <ExtractButton />
+          </Box>
+        </Container>
+        <Footer />
+      </section>
     )
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        justifyContent: 'space-between',
-        overflow: 'hidden',
-      }}
-    >
+    <section className="audioPdfChat">
+      <Navbar />
       <Box
-        component="img"
-        src="background.png"
         sx={{
-          position: 'absolute',
-          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
           height: '100%',
-          objectFit: 'cover',
-          zIndex: -1,
-          top: 0,
-          left: 0,
-        }}
-      />
-      <Box
-        sx={{
-          padding: 2,
-          overflowY: 'auto',
-          height: '80vh',
-          '&::-webkit-scrollbar': {
-            display: 'none',
-          },
-          scrollbarWidth: 'none',
+          justifyContent: 'space-between',
         }}
       >
-        {messages.map((message, index) => (
-          <Box
-            key={index}
-            sx={{
-              display: 'flex',
-              justifyContent:
-                message.role === 'user' ? 'flex-end' : 'flex-start',
-              marginBottom: 1,
-            }}
-          >
-            <Button
-              onClick={() => {
-                new Audio(message.audioURL).play()
-              }}
+        <Box
+          sx={{
+            padding: 2,
+            overflowY: 'auto',
+            height: '80vh',
+          }}
+        >
+          {messages.map((message, index) => (
+            <Box
+              key={index}
               sx={{
-                backgroundColor:
-                  message.role === 'user' ? '#e2f2ff' : '#f7f7f7',
-                borderRadius: 4,
-                padding: 1,
-                maxWidth: '70%',
-                wordBreak: 'break-word',
-                mr: 5,
+                display: 'flex',
+                justifyContent:
+                  message.role === 'user' ? 'flex-end' : 'flex-start',
+                marginBottom: 1,
               }}
             >
-              {message.role === 'user' ? 'You: ' : 'Assistant: '}
-            </Button>
-            {assistantThinking &&
-              message.role === 'assistant' &&
-              !message.audioURL && <CircularProgress />}
-          </Box>
-        ))}
-        <div ref={endOfMessagesRef} />
-      </Box>
-      <Box
-        component="form"
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          borderTop: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(255,255,255,0.2)',
-        }}
-      >
-        <Button
-          variant="contained"
-          onClick={recording ? stopRecording : startRecording}
-          sx={{backgroundColor: '#4f8cff', m: 3}}
-          disabled={assistantThinking}
+              <Button
+                onClick={() => {
+                  new Audio(message.audioURL).play()
+                }}
+              >
+                {message.role === 'user' ? 'You: ' : 'Assistant: '}
+              </Button>
+              {assistantThinking &&
+                message.role === 'assistant' &&
+                !message.audioURL && <CircularProgress />}
+            </Box>
+          ))}
+          <div ref={endOfMessagesRef} />
+        </Box>
+        <Box
+          sx={{
+            padding: 2,
+            borderTop: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
-          {recording ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
-        </Button>
+          <Button
+            variant="contained"
+            onClick={recording ? stopRecording : startRecording}
+            sx={{marginRight: 2, padding: 2}}
+            disabled={assistantThinking} // Disable the button when the assistant is thinking
+          >
+            {recording ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
+          </Button>
+        </Box>
       </Box>
-    </Box>
+      <Footer />
+    </section>
   )
 }
 

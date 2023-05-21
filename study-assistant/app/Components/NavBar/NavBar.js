@@ -73,7 +73,7 @@ export default function Navbar(props) {
           IntelliConverse
         </Typography>
         {pages.map((page) => (
-          <Link href={`/${page}`}>
+          <Link key={page} href={`/${page !== "home" ? page : ""}`}>
             <Button
               variant="text"
               sx={{
