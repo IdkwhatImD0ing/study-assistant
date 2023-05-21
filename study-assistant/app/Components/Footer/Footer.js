@@ -11,7 +11,7 @@ const pages = ["home", "chat", "audioChat", "pdf", "about"];
 
 export default function Footer(props) {
   return (
-    <Box container
+    <Box
       sx={{
         width: "100%",
         height: "20vh",
