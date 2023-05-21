@@ -11,15 +11,19 @@ const pages = ["Home", "Chat", "About"];
 
 export default function Footer(props) {
   return (
-    <Box>
+    <Box
+      sx={{
+        width: "100%",
+        height: "20vh",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
+          height: "100%",
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          width: "100%",
-          height: "20vh",
           backgroundColor: "black",
         }}
       >

@@ -5,7 +5,6 @@ import Footer from "../home/Components/Footer/Footer";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { textAlign, width } from "@mui/system";
 
 export default function AboutPage() {
   return (

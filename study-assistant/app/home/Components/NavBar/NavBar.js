@@ -15,6 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { width } from "@mui/system";
 
 const pages = ["Home", "Chat", "About"];
 
@@ -35,16 +36,19 @@ export default function Navbar(props) {
   };
 
   return (
-    <Box position={"relative"}>
+    <Box sx={{
+        position: "relative",
+        width: "100%",
+        height: "10vh",
+        overflow: "hidden",
+      }}>
       <AppBar
         position="sticky"
         sx={{
           display: "flex",
+          height: "100%",
           flexDirection: "row",
           alignItems: "center",
-          width: "100%",
-          height: "10vh",
-          overflow: "hidden",
           backgroundColor: "black",
         }}
       >
