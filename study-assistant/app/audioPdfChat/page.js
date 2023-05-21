@@ -65,7 +65,7 @@ function ChatInterface() {
           userUUID: uuid,
           contents: chunks,
         }
-        fetch('/api/database', {
+        fetch('https://intelliconverse.azurewebsites.net/database', {
           method: 'PUT',
           body: JSON.stringify(temp),
           headers: {
@@ -93,7 +93,7 @@ function ChatInterface() {
     const handleUnload = async (event) => {
       event.preventDefault()
 
-      fetch('/api/database', {
+      fetch('https://intelliconverse.azurewebsites.net/database', {
         method: 'PATCH',
         body: JSON.stringify({userUUID: uuid}),
         keepalive: true,
@@ -173,7 +173,7 @@ function ChatInterface() {
         }
         setMessages([...messages, userMessage, assistantPlaceholder])
 
-        fetch('/api/database', {
+        fetch('https://intelliconverse.azurewebsites.net/database', {
           method: 'POST',
           body: JSON.stringify({
             userUUID: uuid,
