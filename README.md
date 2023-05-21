@@ -16,14 +16,6 @@ IntelliConverse is a project using Chat-GPT to assist individuals with learning 
 	- [What We Learned](#what-we-learned)
 	- [What's Next](#whats-next)
 	- [How to run](#how-to-run)
-- [What is IntelliConverse?](#what-is-intelliconverse)
-	- [How we built it:](#how-we-built-it)
-		- [Backend Development Approach:](#backend-development-approach-1)
-		- [Frontend Development Approach:](#frontend-development-approach-1)
-	- [Things that challenged us:](#things-that-challenged-us)
-	- [Accomplishments](#accomplishments-1)
-	- [What we learned](#what-we-learned-1)
-	- [What’s next](#whats-next-1)
 
 ### Backend Development Approach
 The backend is developed using an API route with OpenAPI and Chat-GPT for conversational capabilities. We integrated text-to-speech (TTS) and speech-to-text (STT) features with React, Next.js, and Microsoft Cloud services, and used MongoDB for data storage.
