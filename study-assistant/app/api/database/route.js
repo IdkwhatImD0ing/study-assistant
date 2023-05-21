@@ -1,5 +1,5 @@
 import {NextResponse, NextRequest} from 'next/server'
-const connectDB = require('./connect.js')
+const {connectDB, disConnectDB} = require('./connect.js')
 const {addToMilvus, queryMilvus} = require('./milvus.js')
 const embedding = require('./embedding.js')
 const insertData = require('./mongodb.js')
@@ -7,19 +7,19 @@ const processData = require('./process.js')
 
 // OpenAI API
 const {Configuration, OpenAIApi} = require('openai')
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_TOKEN,
-})
-const openai = new OpenAIApi(configuration)
 
 // Milvus Database Setup
 const {MilvusClient} = require('@zilliz/milvus2-sdk-node')
 const config = require('./config.js')
 const {uri, user, password, secure} = config
-const milvusClient = new MilvusClient(uri, secure, user, password, secure)
 
 // PUT /api/database
 export async function PUT(req) {
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_TOKEN,
+  })
+  const openai = new OpenAIApi(configuration)
+  const milvusClient = new MilvusClient(uri, secure, user, password, secure)
   // MongoDB Setup
   await connectDB(process.env.MONGODB_URL)
   const Speech = require('./data.js')
@@ -48,10 +48,12 @@ export async function PUT(req) {
 
     await addToMilvus(milvusClient, milvusData)
     await insertData(userUUID, mongoData)
+    await disConnectDB()
 
     return NextResponse.json({body: 'Success'})
   } catch (err) {
     console.log(err)
+    await disConnectDB()
     return new NextResponse({
       status: 500,
       body: 'Error',
@@ -62,6 +64,11 @@ export async function PUT(req) {
 // Post request for querying the database
 // POST /api/database
 export async function POST(req) {
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_TOKEN,
+  })
+  const openai = new OpenAIApi(configuration)
+  const milvusClient = new MilvusClient(uri, secure, user, password, secure)
   // MongoDB Setup
   await connectDB(process.env.MONGODB_URL)
   const Speech = require('./data.js')
@@ -95,8 +102,6 @@ export async function POST(req) {
     })
     const file = fileArray.join('\n\n')
 
-    const string = ``
-
     // Create the message
     const message = {
       role: 'user',
@@ -114,10 +119,11 @@ export async function POST(req) {
     })
 
     const reply = completion.data.choices[0].message.content
-
+    await disConnectDB()
     return NextResponse.json({role: 'assistant', content: reply})
   } catch (err) {
     console.log(err)
+    await disConnectDB()
     return new NextResponse({
       status: 500,
       body: 'Error',
@@ -128,6 +134,7 @@ export async function POST(req) {
 // Delete request for deleting the database
 // PATCH /api/database
 export async function PATCH(req) {
+  const milvusClient = new MilvusClient(uri, secure, user, password, secure)
   // MongoDB Setup
   await connectDB(process.env.MONGODB_URL)
   const Speech = require('./data.js')
@@ -170,10 +177,11 @@ export async function PATCH(req) {
 
     // Delete the repository in MongoDB
     await Speech.findByIdAndDelete(userUUID)
-
+    await disConnectDB()
     return NextResponse.json({body: 'Success'})
   } catch (err) {
     console.log(err)
+    await disConnectDB()
     return new NextResponse({
       status: 500,
       body: 'Error',

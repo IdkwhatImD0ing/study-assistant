@@ -11,4 +11,13 @@ const connectDB = async (url) => {
   }
 }
 
-module.exports = connectDB
+const disConnectDB = async () => {
+  try {
+    await mongoose.disconnect()
+    console.log('Disconnected from MongoDB')
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+module.exports = {connectDB, disConnectDB}
