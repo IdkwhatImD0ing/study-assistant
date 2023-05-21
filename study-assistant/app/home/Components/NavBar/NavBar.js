@@ -16,7 +16,7 @@ import Settings from "@mui/icons-material/Settings";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonIcon from '@mui/icons-material/Person';
 
-const pages = ["Home", "Chat", "Pdf", "About"];
+const pages = ["Home", "Chat", "AudioChat", "Pdf", "About"];
 
 export default function Navbar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -39,7 +39,7 @@ export default function Navbar(props) {
         position: "relative",
         width: "100%",
         height: "10vh",
-        overflow: "hidden",
+        backgroundColor: "black",
       }}>
       <AppBar
         position="sticky"

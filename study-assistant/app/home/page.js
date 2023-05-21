@@ -16,17 +16,17 @@ export default function Homepage() {
         sx={{
           width: "100%",
           positive: "relative",
+          backgroundColor: "black",
         }}
       >
         <Image
           src={HomepageImg}
           alt="homepage"
-          width={1920}
-          height={1080}
           style={{
-            objectFit: "cover",
-            transition: "0.6s",
+            width: "100%",
+            height: "auto",
             filter: "brightness(30%)",
+            position: "relative",
           }}
         />
         <Typography
@@ -51,7 +51,7 @@ export default function Homepage() {
             color: "white",
           }}
         >
-          A study assistant for students, by students.
+          An audio study pal for students, by students.
         </Typography>
         <Button
           variant="contained"

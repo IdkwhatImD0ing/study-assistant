@@ -87,11 +87,11 @@ export default function AboutPage() {
               sx={{
                 color: "black",
                 textAlign: "center",
-                mt: ".5em",
+                mt: "1em",
                 fontWeight: "bold",
               }}
             >
-              Contribution
+              About Us!
             </Typography>
             <Box sx={{
                 display: "flex",
