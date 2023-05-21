@@ -8,6 +8,17 @@ const nextConfig = {
     config.experiments = {...config.experiments, topLevelAwait: true}
     return config
   },
+  functions: {
+    'api/chat': {
+      maxDuration: 60,
+    },
+    'api/stt': {
+      maxDuration: 60,
+    },
+    'api/tts': {
+      maxDuration: 60,
+    },
+  },
 }
 
 module.exports = nextConfig
