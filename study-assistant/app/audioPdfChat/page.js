@@ -149,26 +149,24 @@ function ChatInterface() {
     })
       .then((response) => response.json())
       .then((data) => {
-        const temp = []
-        for (let i = 0; i < messages.length; i++) {
-          temp.push({role: messages[i].role, content: messages[i].content})
+        const userMessage = {
+          role: 'user',
+          content: data.body,
+          audioURL: URL.createObjectURL(audioBlob),
         }
-
-        setMessages([
-          ...messages,
-          {
-            role: 'user',
-            content: data.body,
-            audioURL: URL.createObjectURL(audioBlob),
-          },
-        ])
+        const assistantPlaceholder = {
+          role: 'assistant',
+          content: '', // placeholder content if you have any
+          audioURL: null,
+        }
+        setMessages([...messages, userMessage, assistantPlaceholder])
 
         fetch('/api/database', {
           method: 'POST',
           body: JSON.stringify({
             userUUID: 'temp',
             query: data.body,
-            conversation: temp,
+            conversation: [...messages, userMessage], // We're not including the assistant placeholder here
           }),
           headers: {
             'Content-Type': 'application/json',
@@ -188,11 +186,12 @@ function ChatInterface() {
                 const newAudioURL = URL.createObjectURL(audioBlob)
                 setMessages((prevMessages) => {
                   const newMessages = [...prevMessages]
-                  newMessages.push({
+                  newMessages[newMessages.length - 1] = {
+                    // Replace the assistant's placeholder with the real response
                     role: 'assistant',
                     content: data.content,
                     audioURL: newAudioURL,
-                  })
+                  }
                   return newMessages
                 })
                 const audio = new Audio(newAudioURL)
@@ -245,6 +244,32 @@ function ChatInterface() {
     }
   }, [messages])
 
+  // Use loadingPDF state to disable button and display loading symbol
+  const ExtractButton = () => (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={extractText}
+      disabled={!file || loadingPDF}
+      sx={{
+        backgroundColor: loadingPDF ? '#9E9E9E' : '#3f51b5', // grey color when loading
+      }}
+    >
+      {loadingPDF ? (
+        <CircularProgress size={24} color="secondary" />
+      ) : (
+        'Extract Text'
+      )}
+    </Button>
+  )
+
+  // Determine if the assistant is thinking by checking if the last message was a user message or an assistant message without an audioURL
+  const assistantThinking =
+    messages.length > 0 &&
+    (messages[messages.length - 1].role === 'user' ||
+      (messages[messages.length - 1].role === 'assistant' &&
+        !messages[messages.length - 1].audioURL))
+
   if (!pdfParsed) {
     return (
       <Container>
@@ -273,14 +298,7 @@ function ChatInterface() {
               Upload PDF
             </Button>
           </label>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={extractText}
-            disabled={!file || loading}
-          >
-            {loading ? <CircularProgress size={24} /> : 'Extract Text'}
-          </Button>
+          <ExtractButton />
         </Box>
       </Container>
     )
@@ -319,7 +337,9 @@ function ChatInterface() {
             >
               {message.role === 'user' ? 'You: ' : 'Assistant: '}
             </Button>
-            {loading && message.role === 'assistant' && <CircularProgress />}
+            {assistantThinking &&
+              message.role === 'assistant' &&
+              !message.audioURL && <CircularProgress />}
           </Box>
         ))}
         <div ref={endOfMessagesRef} />
@@ -337,6 +357,7 @@ function ChatInterface() {
           variant="contained"
           onClick={recording ? stopRecording : startRecording}
           sx={{marginRight: 2, padding: 2}}
+          disabled={assistantThinking} // Disable the button when the assistant is thinking
         >
           {recording ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
         </Button>

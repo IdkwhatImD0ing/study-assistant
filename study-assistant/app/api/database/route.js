@@ -89,14 +89,16 @@ export async function POST(req) {
     const filesMap = new Map(files.files.entries())
     const fileArray = []
     fileUUID.forEach((id) => {
-      fileArray.push(filesMap.get(id.id).contents)
+      if (filesMap.has(id.id)) {
+        fileArray.push(filesMap.get(id.id).contents)
+      }
     })
     const file = fileArray.join('\n\n')
 
     // Create the message
     const message = {
       role: 'user',
-      content: `Answer the following question:\n${data.query}\nThe following information maybe useful, if it isn't useful, don't mention it and answer to the best of your ability\n\n${file}`,
+      content: `Answer the following question:\n${data.query}\nThe following information may be useful, if it isn't useful, don't mention it and answer to the best of your ability\n\n${file}`,
     }
 
     // Add the message to the conversation
