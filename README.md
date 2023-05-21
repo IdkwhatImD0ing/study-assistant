@@ -63,6 +63,7 @@ Our project aims to address the challenges faced by individuals with learning di
 
 To overcome these challenges, we have developed a program that leverages Chat-GPT, a powerful language model, to provide comprehensive and accessible answers to questions. The program accommodates both typed and spoken inputs, allowing users to interact with the system in a way that suits their preferences and abilities.
 Targeting the main group of people with learning disabilities, our solution enables them to receive text and speech outputs that effectively address their queries and provide the information they need. Additionally, we recognize the potential of our program to support individuals with mental health concerns. By offering a platform for expressing emotions, whether through typed or spoken input, our solution aims to provide a supportive and inclusive environment for individuals dealing with mental health challenges.
+
 Overall, our program seeks to enhance accessibility, promote effective communication, and empower individuals with learning disabilities and mental health issues to overcome their unique challenges.
 
 ## How we built it:
@@ -82,4 +83,9 @@ Overcoming these challenges required careful debugging, troubleshooting, and fin
 ## What we learned
 	Cont…
 ## What’s next
-	Cont…
+- Customization and Training: We'll customize the Chat GPT model to meet our project's objectives, emphasizing a safe and supportive environment.
+- Safety Measures: Robust safety measures will be implemented, including human moderation, filters, and AI techniques to handle sensitive content.
+- User Feedback and Iteration: Collecting user feedback to enhance the system and improve user experiences.
+- Collaboration and Partnerships: Collaborating with experts and organizations to gain insights and expand our impact.
+- Research and Innovation: Staying updated with NLP advancements and AI ethics for continuous improvement.
+- Expansion and Outreach: Exploring opportunities to reach a wider audience through partnerships and outreach efforts.
