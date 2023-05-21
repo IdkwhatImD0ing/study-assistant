@@ -7,27 +7,28 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import FaceIcon from '@mui/icons-material/Face';
 import { Avatar, Grid, Box } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const teamMembers = [
   {
-    name: 'John Doe',
-    role: 'CEO',
-    avatar: 'https://example.com/avatar1.png',
+    name: 'Bill Zhang',
+    role: 'Full Stack',
+    avatar: 'bill.jpg',
   },
   {
-    name: 'Jane Smith',
-    role: 'CTO',
-    avatar: 'https://example.com/avatar2.png',
+    name: 'Varun Swaminathan',
+    role: 'Backend',
+    avatar: 'varun.jpg',
   },
   {
-    name: 'John Doe',
-    role: 'CEO',
-    avatar: 'https://example.com/avatar1.png',
+    name: 'Ryan Yu',
+    role: 'Frontend',
+    avatar: 'ryan.jpg',
   },
   {
-    name: 'Jane Smith',
-    role: 'CTO',
-    avatar: 'https://example.com/avatar2.png',
+    name: 'Sophia Thompson',
+    role: 'Full Stack',
+    avatar: 'sophia.jpg',
   },
 ];
 
@@ -41,15 +42,16 @@ export default function AboutPage() {
           About
         </Typography>
         <Typography variant="body1" maxWidth="sm" style={{ textAlign: 'center' }}>
-          body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-          blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur,
-          neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum
-          quasi quidem quibusdam.
+          Introducing IntelliConverse, the ultimate tool for empowering individuals with learning
+          disabilities and reading difficulties. Harnessing the power of Chat-GPT technology, our
+          project provides comprehensive support through both typed and spoken interactions. Say
+          goodbye to barriers and hello to effective communication, as IntelliConverse helps you
+          overcome challenges and unlock your full potential.
         </Typography>
       </Box>
       <Box my={10} />
-      <Typography variant="h5" align="center">
-        The team
+      <Typography variant="h5" align="center" alignSelf="center">
+        The Team
       </Typography>
       <Box my={4} />
       <Grid container spacing={8} justifyContent="center">
@@ -67,7 +69,7 @@ export default function AboutPage() {
           </Grid>
         ))}
       </Grid>
-      <Box my={8} />
+      <Box my={12} />
       <Footer />
     </section>
   );
