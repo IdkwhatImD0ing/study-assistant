@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Container,
@@ -8,7 +8,10 @@ import {
   TextField,
   CircularProgress,
 } from '@mui/material'
-import {styled} from '@mui/system'
+import { styled } from '@mui/system'
+import UUIDProvider from '../UUIDProvider'
+import UUIDContext from '../UUIDContext'
+import { useContext } from 'react';
 
 const Input = styled('input')({
   display: 'none',
@@ -91,12 +94,25 @@ export default function Pdf() {
         {extractedText && (
           <Typography
             variant="body1"
-            sx={{mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2}}
+            sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2 }}
           >
             {extractedText}
           </Typography>
         )}
       </Box>
+      <UUIDProvider>
+        <MyComponent />
+      </UUIDProvider>
     </Container>
   )
 }
+
+const MyComponent = () => {
+  const uuid = useContext(UUIDContext);
+
+  return (
+    <div>
+      Unique Value: {uuid}
+    </div>
+  );
+};
