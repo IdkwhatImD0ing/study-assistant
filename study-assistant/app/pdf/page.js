@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import {
   Button,
   Container,
@@ -8,10 +8,10 @@ import {
   TextField,
   CircularProgress,
 } from '@mui/material'
-import { styled } from '@mui/system'
+import {styled} from '@mui/system'
 import UUIDProvider from '../UUIDProvider'
 import UUIDContext from '../UUIDContext'
-import { useContext } from 'react';
+import {useContext} from 'react'
 
 const Input = styled('input')({
   display: 'none',
@@ -19,7 +19,7 @@ const Input = styled('input')({
 
 export default function Pdf() {
   const [file, setFile] = useState()
-  const [extractedText, setExtractedText] = useState('')
+  const [extractedText, setExtractedText] = useState([])
   const [loading, setLoading] = useState(false)
 
   const handleFileChange = (event) => {
@@ -37,13 +37,21 @@ export default function Pdf() {
       const formData = new FormData()
       formData.append('pdf', file)
 
-      const response = await fetch('http://localhost:3001/upload', {
-        method: 'POST',
-        body: formData,
-      })
+      const response = await fetch(
+        'https://intelliconverse.azurewebsites.net/upload',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      )
 
       if (response.ok) {
         const text = await response.text()
+        // Split into array of strings of size 4000 characters
+        const chunks = []
+        for (let i = 0; i < text.length; i += 4000) {
+          chunks.push(text.substring(i, i + 4000))
+        }
         setExtractedText(text)
       } else {
         throw new Error('Failed to extract text')
@@ -94,7 +102,7 @@ export default function Pdf() {
         {extractedText && (
           <Typography
             variant="body1"
-            sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2 }}
+            sx={{mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2}}
           >
             {extractedText}
           </Typography>
@@ -108,11 +116,7 @@ export default function Pdf() {
 }
 
 const MyComponent = () => {
-  const uuid = useContext(UUIDContext);
+  const uuid = useContext(UUIDContext)
 
-  return (
-    <div>
-      Unique Value: {uuid}
-    </div>
-  );
-};
+  return <div>Unique Value: {uuid}</div>
+}

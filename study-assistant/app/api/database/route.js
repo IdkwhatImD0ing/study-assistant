@@ -1,5 +1,5 @@
 import {NextResponse, NextRequest} from 'next/server'
-const connectDB = require('./connect.js')
+const {connectDB, disConnectDB} = require('./connect.js')
 const {addToMilvus, queryMilvus} = require('./milvus.js')
 const embedding = require('./embedding.js')
 const insertData = require('./mongodb.js')
@@ -7,19 +7,19 @@ const processData = require('./process.js')
 
 // OpenAI API
 const {Configuration, OpenAIApi} = require('openai')
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_TOKEN,
-})
-const openai = new OpenAIApi(configuration)
 
 // Milvus Database Setup
 const {MilvusClient} = require('@zilliz/milvus2-sdk-node')
 const config = require('./config.js')
 const {uri, user, password, secure} = config
-const milvusClient = new MilvusClient(uri, secure, user, password, secure)
 
 // PUT /api/database
 export async function PUT(req) {
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_TOKEN,
+  })
+  const openai = new OpenAIApi(configuration)
+  const milvusClient = new MilvusClient(uri, secure, user, password, secure)
   // MongoDB Setup
   await connectDB(process.env.MONGODB_URL)
   const Speech = require('./data.js')
@@ -48,10 +48,12 @@ export async function PUT(req) {
 
     await addToMilvus(milvusClient, milvusData)
     await insertData(userUUID, mongoData)
+    await disConnectDB()
 
     return NextResponse.json({body: 'Success'})
   } catch (err) {
     console.log(err)
+    await disConnectDB()
     return new NextResponse({
       status: 500,
       body: 'Error',
@@ -62,6 +64,11 @@ export async function PUT(req) {
 // Post request for querying the database
 // POST /api/database
 export async function POST(req) {
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_TOKEN,
+  })
+  const openai = new OpenAIApi(configuration)
+  const milvusClient = new MilvusClient(uri, secure, user, password, secure)
   // MongoDB Setup
   await connectDB(process.env.MONGODB_URL)
   const Speech = require('./data.js')
@@ -87,12 +94,18 @@ export async function POST(req) {
     // Get the contents of the file
     const files = await Speech.findOne({_id: userUUID})
     const filesMap = new Map(files.files.entries())
-    const file = filesMap.get(fileUUID).contents
+    const fileArray = []
+    fileUUID.forEach((id) => {
+      if (filesMap.has(id.id)) {
+        fileArray.push(filesMap.get(id.id).contents)
+      }
+    })
+    const file = fileArray.join('\n\n')
 
     // Create the message
     const message = {
       role: 'user',
-      content: `Answer the following question:\n${data.query}\nThe following information maybe useful, if it isn't useful, don't mention it and answer to the best of your ability\n${file}`,
+      content: `Answer the following question:\n${data.query}\nThe following information may be useful, if it isn't useful, don't mention it and answer to the best of your ability\n\n${file}`,
     }
 
     // Add the message to the conversation
@@ -105,9 +118,12 @@ export async function POST(req) {
       messages: updatedConversation,
     })
 
-    return NextResponse.json({body: completion.data.choices[0].message.content})
+    const reply = completion.data.choices[0].message.content
+    await disConnectDB()
+    return NextResponse.json({role: 'assistant', content: reply})
   } catch (err) {
     console.log(err)
+    await disConnectDB()
     return new NextResponse({
       status: 500,
       body: 'Error',
@@ -116,8 +132,9 @@ export async function POST(req) {
 }
 
 // Delete request for deleting the database
-// DELETE /api/database
+// PATCH /api/database
 export async function PATCH(req) {
+  const milvusClient = new MilvusClient(uri, secure, user, password, secure)
   // MongoDB Setup
   await connectDB(process.env.MONGODB_URL)
   const Speech = require('./data.js')
@@ -144,13 +161,10 @@ export async function PATCH(req) {
     const fileUUIDs = []
     if (speech) {
       const files = speech.files
-      console.log(speech)
       for (const [key, value] of files.entries()) {
         fileUUIDs.push(value._id)
       }
     }
-
-    console.log(fileUUIDs)
 
     // Format the fileUUIDs for the deleteEntities expression
     const expr = `fileUUID in [${fileUUIDs.map((id) => `"${id}"`).join(', ')}]`
@@ -163,10 +177,11 @@ export async function PATCH(req) {
 
     // Delete the repository in MongoDB
     await Speech.findByIdAndDelete(userUUID)
-
+    await disConnectDB()
     return NextResponse.json({body: 'Success'})
   } catch (err) {
     console.log(err)
+    await disConnectDB()
     return new NextResponse({
       status: 500,
       body: 'Error',

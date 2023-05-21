@@ -1,11 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { Box, TextField, Button, Typography } from '@mui/material'
+import {useState, useEffect, useRef} from 'react'
+import {Box, TextField, Button, Typography} from '@mui/material'
 import UUIDProvider from '../UUIDProvider'
 import UUIDContext from '../UUIDContext'
-import { useContext } from 'react';
-
+import {useContext} from 'react'
 
 function ChatInterface() {
   const [messages, setMessages] = useState([])
@@ -13,7 +12,7 @@ function ChatInterface() {
   const endOfMessagesRef = useRef(null)
 
   const scrollToBottom = () => {
-    endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' })
+    endOfMessagesRef.current.scrollIntoView({behavior: 'smooth'})
   }
 
   useEffect(scrollToBottom, [messages])
@@ -48,13 +47,30 @@ function ChatInterface() {
         flexDirection: 'column',
         height: '100%',
         justifyContent: 'space-between',
+        overflow: 'hidden',
       }}
     >
       <Box
+        component="img"
+        src="background.png"
         sx={{
-          padding: 2,
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+          top: 0,
+          left: 0,
+        }}
+      />
+      <Box
+        sx={{
           overflowY: 'auto',
           height: '80vh',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          scrollbarWidth: 'none',
         }}
       >
         {messages.map((message, index) => (
@@ -64,7 +80,6 @@ function ChatInterface() {
               display: 'flex',
               justifyContent:
                 message.role === 'user' ? 'flex-end' : 'flex-start',
-              marginBottom: 1,
             }}
           >
             <Box
@@ -92,11 +107,14 @@ function ChatInterface() {
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          padding: 2,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '100%',
           borderTop: 1,
-          borderColor: 'divider',
           display: 'flex',
           alignItems: 'center',
+          backgroundColor: 'rgba(255,255,255,0.2)',
         }}
       >
         <TextField
@@ -104,28 +122,22 @@ function ChatInterface() {
           fullWidth
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          sx={{marginRight: 2}}
+          sx={{
+            margin: 3,
+            backgroundColor: '#fff',
+          }}
           autoComplete="off"
         />
-        <Button variant="contained" type="submit">
+        <Button
+          variant="contained"
+          type="submit"
+          sx={{backgroundColor: '#4f8cff', mr: 3}}
+        >
           Send
         </Button>
       </Box>
-      <UUIDProvider>
-        <MyComponent />
-      </UUIDProvider>
     </Box>
   )
 }
-
-const MyComponent = () => {
-  const uuid = useContext(UUIDContext);
-
-  return (
-    <div>
-      Unique Value: {uuid}
-    </div>
-  );
-};
 
 export default ChatInterface
