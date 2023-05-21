@@ -130,8 +130,6 @@ function AudioRecorder() {
   }
   return (
     <Box
-      component="img"
-      src="background.png"
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -143,6 +141,19 @@ function AudioRecorder() {
         backgroundColor: '#f5f5f5',
       }}
     >
+      <Box
+        component="img"
+        src="background.png"
+        sx={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+          top: 0,
+          left: 0,
+        }}
+      />
       <Button
         variant="outlined"
         color="primary"
