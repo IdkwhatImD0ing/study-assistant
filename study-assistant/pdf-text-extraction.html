@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF Text Extraction</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <script>
+    function extractText() {
+      var fileInput = document.getElementById('pdfInput');
+      var file = fileInput.files[0];
+      
+      var fileReader = new FileReader();
+      fileReader.onload = function() {
+        var typedarray = new Uint8Array(this.result);
+
+        // Load PDF using PDF.js library
+        pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+          var numPages = pdf.numPages;
+          var extractedText = '';
+
+          // Extract text from each page
+          for (var i = 1; i <= numPages; i++) {
+            pdf.getPage(i).then(function(page) {
+              page.getTextContent().then(function(textContent) {
+                var pageText = textContent.items.map(function(item) {
+                  return item.str;
+                }).join(' ');
+                extractedText += pageText + ' ';
+                splitAndDisplayText(extractedText);
+              });
+            });
+          }
+        });
+      };
+      
+      fileReader.readAsArrayBuffer(file);
+    }
+
+    // -- to split into 4000 char chunks, output accordingly
+    function splitAndDisplayText(text) {
+      var chunks = [];
+      var chunkSize = 4000;
+      var index = 0;
+
+      while (index < text.length) {
+        chunks.push(text.substr(index, chunkSize));
+        index += chunkSize;
+      }
+
+      var extractedTextDiv = document.getElementById('extractedText');
+      extractedTextDiv.innerHTML = '';
+
+      chunks.forEach(function(chunk) {
+        var chunkDiv = document.createElement('div');
+        chunkDiv.innerText = chunk;
+        extractedTextDiv.appendChild(chunkDiv);
+      });
+    }
+  </script>
+</head>
+<body>
+  <input type="file" id="pdfInput" accept="application/pdf">
+  <button onclick="extractText()">Extract Text</button>
+  <div id="extractedText"></div>
+</body>
+</html>
