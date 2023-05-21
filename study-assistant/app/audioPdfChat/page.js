@@ -1,7 +1,7 @@
 'use client'
 
-import Navbar from './Components/NavBar/NavBar'
-import Footer from './Components/Footer/Footer'
+import Navbar from '../Components/NavBar/NavBar'
+import Footer from '../Components/Footer/Footer'
 import {useState, useEffect, useRef} from 'react'
 import {
   Box,
@@ -67,7 +67,7 @@ function ChatInterface() {
           userUUID: uuid,
           contents: chunks,
         }
-        fetch('/api/database', {
+        fetch('https://intelliconverse.azurewebsites.net/database', {
           method: 'PUT',
           body: JSON.stringify(temp),
           headers: {
@@ -95,7 +95,7 @@ function ChatInterface() {
     const handleUnload = async (event) => {
       event.preventDefault()
 
-      fetch('/api/database', {
+      fetch('https://intelliconverse.azurewebsites.net/database', {
         method: 'PATCH',
         body: JSON.stringify({userUUID: uuid}),
         keepalive: true,
@@ -175,7 +175,7 @@ function ChatInterface() {
         }
         setMessages([...messages, userMessage, assistantPlaceholder])
 
-        fetch('/api/database', {
+        fetch('https://intelliconverse.azurewebsites.net/database', {
           method: 'POST',
           body: JSON.stringify({
             userUUID: uuid,
