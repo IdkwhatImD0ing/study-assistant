@@ -30,7 +30,7 @@ const addToMilvus = async (instance, milvusData) => {
 const queryMilvus = async (instance, vector, userUUID) => {
   const searchParams = {
     anns_field: 'vector',
-    topk: 1,
+    topk: 2,
     metric_type: MetricType.L2,
     params: JSON.stringify({nprobe: 16}),
   }
@@ -45,7 +45,7 @@ const queryMilvus = async (instance, vector, userUUID) => {
   }
 
   const response = await instance.search(query)
-  return response.results[0].fileUUID
+  return response.results
 }
 
 module.exports = {addToMilvus, queryMilvus}
