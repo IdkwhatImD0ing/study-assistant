@@ -1,7 +1,7 @@
 "use client";
 
-import Navbar from "../home/Components/NavBar/NavBar";
-import Footer from "../home/Components/Footer/Footer";
+import Navbar from "../Components/NavBar/NavBar";
+import Footer from "../Components/Footer/Footer";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";

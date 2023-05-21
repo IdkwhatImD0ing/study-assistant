@@ -42,7 +42,7 @@ export default function Footer(props) {
             }}
           >
             {pages.map((page) => (
-              <Link key={page.toLowerCase()} href={`/${page.toLowerCase()}`}>
+              <Link key={page} href={`/${page !== "home" ? page : ""}`}>
                 <Button
                   sx={{
                     color: "white",
