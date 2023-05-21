@@ -9,6 +9,8 @@ import {
   CircularProgress,
 } from '@mui/material'
 import {styled} from '@mui/system'
+import Navbar from '../Components/NavBar/NavBar'
+import Footer from '../Components/Footer/Footer'
 import UUIDProvider from '../UUIDProvider'
 import UUIDContext from '../UUIDContext'
 import {useContext} from 'react'
@@ -65,58 +67,53 @@ export default function Pdf() {
   }
 
   return (
-    <Container>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 2,
-          marginTop: 5,
-          overflow: 'auto',
-          minHeight: '100vh',
-        }}
-      >
-        <Typography variant="h2" gutterBottom>
-          PDF Text Extractor
-        </Typography>
-        <label htmlFor="contained-button-file">
-          <Input
-            accept="application/pdf"
-            id="contained-button-file"
-            type="file"
-            onChange={handleFileChange}
-          />
-          <Button variant="outlined" component="span">
-            Upload PDF
-          </Button>
-        </label>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={extractText}
-          disabled={!file || loading}
+    <section className="pdf">
+      <Navbar />
+      <Container>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+            marginTop: 5,
+            overflow: 'auto',
+            minHeight: '100vh',
+          }}
         >
-          {loading ? <CircularProgress size={24} /> : 'Extract Text'}
-        </Button>
-        {extractedText && (
-          <Typography
-            variant="body1"
-            sx={{mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2}}
-          >
-            {extractedText}
+          <Typography variant="h2" gutterBottom>
+            PDF Text Extractor
           </Typography>
-        )}
-      </Box>
-      <UUIDProvider>
-        <MyComponent />
-      </UUIDProvider>
-    </Container>
+          <label htmlFor="contained-button-file">
+            <Input
+              accept="application/pdf"
+              id="contained-button-file"
+              type="file"
+              onChange={handleFileChange}
+            />
+            <Button variant="outlined" component="span">
+              Upload PDF
+            </Button>
+          </label>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={extractText}
+            disabled={!file || loading}
+          >
+            {loading ? <CircularProgress size={24} /> : 'Extract Text'}
+          </Button>
+          {extractedText && (
+            <Typography
+              variant="body1"
+              sx={{mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2}}
+            >
+              {extractedText}
+            </Typography>
+          )}
+        </Box>
+      </Container>
+      <Footer />
+    </section>
   )
-}
-
-const MyComponent = () => {
-  const uuid = useContext(UUIDContext)
-
-  return <div>Unique Value: {uuid}</div>
 }
