@@ -14,10 +14,9 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { width } from "@mui/system";
+import PersonIcon from '@mui/icons-material/Person';
 
-const pages = ["Home", "Chat", "About"];
+const pages = ["Home", "Chat", "Pdf", "About"];
 
 export default function Navbar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -94,7 +93,7 @@ export default function Navbar(props) {
           }}
         >
           <IconButton onClick={handleClick}>
-            <AccountCircleIcon fontSize="xl" />
+            <PersonIcon fontSize="xl" />
           </IconButton>
           <Menu
             anchorEl={anchorEl}
