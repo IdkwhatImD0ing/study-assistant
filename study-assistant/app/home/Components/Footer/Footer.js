@@ -48,7 +48,7 @@ export default function Footer(props) {
               </Link>
             ))}
           </Box>
-          <IconButton>
+          <IconButton disabled={true}>
             <AdbIcon fontSize="large" sx={{ color: "white" }} />
           </IconButton>
         </Box>

@@ -44,6 +44,7 @@ export default function Navbar(props) {
           alignItems: "center",
           width: "100%",
           height: "10vh",
+          overflow: "hidden",
           backgroundColor: "black",
         }}
       >
@@ -66,7 +67,7 @@ export default function Navbar(props) {
             fontSize: "2em",
           }}
         >
-          Study Assistant
+          Study Buddy
         </Typography>
         {pages.map((page) => (
           <Link href={`/${page.toLowerCase()}`}>
