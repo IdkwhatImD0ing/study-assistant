@@ -1,2 +1,4 @@
 study-assistant/app/api/database/config.js
 server/routes/connect.js
+
+.vercel

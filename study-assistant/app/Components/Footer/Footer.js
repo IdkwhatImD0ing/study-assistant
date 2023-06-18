@@ -1,51 +1,51 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Link from "next/link";
+import React from 'react'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Link from 'next/link'
 
-import AdbIcon from "@mui/icons-material/Adb";
+import AdbIcon from '@mui/icons-material/Adb'
 
-const pages = ["home", "chat", "audioChat", "pdf", "about"];
+const pages = ['home', 'chat', 'audioChat', 'pdf', 'about']
 
 export default function Footer(props) {
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "20vh",
-        backgroundColor: "black",
+        width: '100%',
+        height: '20vh',
+        backgroundColor: 'black',
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          height: "100%",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "black",
+          display: 'flex',
+          height: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'black',
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "row",
+              display: 'flex',
+              flexDirection: 'row',
             }}
           >
             {pages.map((page) => (
-              <Link key={page} href={`/${page !== "home" ? page : ""}`}>
+              <Link key={page} href={`/${page !== 'home' ? page : ''}`}>
                 <Button
                   sx={{
-                    color: "white",
+                    color: 'white',
                   }}
                 >
                   {page}
@@ -54,11 +54,11 @@ export default function Footer(props) {
             ))}
           </Box>
           <IconButton disabled={true}>
-            <AdbIcon fontSize="large" sx={{ color: "white" }} />
+            <AdbIcon fontSize="large" sx={{color: 'white'}} />
           </IconButton>
         </Box>
-        <Typography variant="h6" color={"white"}></Typography>
+        <Typography variant="h6" color={'white'}></Typography>
       </Box>
     </Box>
-  );
+  )
 }

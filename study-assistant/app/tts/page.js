@@ -1,55 +1,55 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { TextField, Button } from "@mui/material";
-import Navbar from "../Components/NavBar/NavBar";
-import Footer from "../Components/Footer/Footer";
+import React, {useState} from 'react'
+import {TextField, Button} from '@mui/material'
+import Navbar from '../Components/NavBar/NavBar'
+import Footer from '../Components/Footer/Footer'
 
 export default function MyForm() {
-  const [inputValue, setInputValue] = useState("");
-  const [audioData, setAudioData] = useState(null);
+  const [inputValue, setInputValue] = useState('')
+  const [audioData, setAudioData] = useState(null)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     // Perform submit logic here
-    console.log("Submitted:", inputValue);
-    await fetchAudio(inputValue);
-  };
+    console.log('Submitted:', inputValue)
+    await fetchAudio(inputValue)
+  }
 
   const fetchAudio = async (input) => {
     try {
-      const response = await fetch("/api/tts", {
-        method: "POST",
+      const response = await fetch('/api/tts', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: input }),
-      });
+        body: JSON.stringify({text: input}),
+      })
       if (response.ok) {
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setAudioData(audioUrl);
+        const audioBlob = await response.blob()
+        const audioUrl = URL.createObjectURL(audioBlob)
+        setAudioData(audioUrl)
       } else {
-        console.error("Error fetching audio");
+        console.error('Error fetching audio')
       }
     } catch (error) {
-      console.error("Error fetching audio:", error);
+      console.error('Error fetching audio:', error)
     }
-  };
+  }
 
   const handlePlay = () => {
-    const audioElement = document.getElementById("audio-player");
-    audioElement.play();
-  };
+    const audioElement = document.getElementById('audio-player')
+    audioElement.play()
+  }
 
   const handlePause = () => {
-    const audioElement = document.getElementById("audio-player");
-    audioElement.pause();
-  };
+    const audioElement = document.getElementById('audio-player')
+    audioElement.pause()
+  }
 
   const handleChange = (e) => {
-    setInputValue(e.target.value);
-  };
+    setInputValue(e.target.value)
+  }
 
   return (
     <>
@@ -75,5 +75,5 @@ export default function MyForm() {
       </Button>
       <Footer />
     </>
-  );
+  )
 }

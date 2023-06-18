@@ -1,63 +1,65 @@
-import { useState } from "react";
-import Link from "next/link";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import AppBar from "@mui/material/AppBar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import Icon from "@mui/material/Icon";
-import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
-import AdbIcon from "@mui/icons-material/Adb";
-import LoginIcon from "@mui/icons-material/Login";
-import LogoutIcon from "@mui/icons-material/Logout";
-import Settings from "@mui/icons-material/Settings";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import PersonIcon from '@mui/icons-material/Person';
+import {useState} from 'react'
+import Link from 'next/link'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import AppBar from '@mui/material/AppBar'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Button from '@mui/material/Button'
+import Icon from '@mui/material/Icon'
+import IconButton from '@mui/material/IconButton'
+import Avatar from '@mui/material/Avatar'
+import AdbIcon from '@mui/icons-material/Adb'
+import LoginIcon from '@mui/icons-material/Login'
+import LogoutIcon from '@mui/icons-material/Logout'
+import Settings from '@mui/icons-material/Settings'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import PersonIcon from '@mui/icons-material/Person'
 
-const pages = ["home", "chat", "audioChat", "pdf", "about"];
+const pages = ['home', 'chat', 'audioChat', 'audioPdfChat', 'about']
 
 export default function Navbar(props) {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [login, setLogin] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [login, setLogin] = useState(false)
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   const handleLogin = () => {
-    setLogin(!login);
-  };
+    setLogin(!login)
+  }
 
   return (
-    <Box sx={{
-        position: "relative",
-        width: "100%",
-        height: "10vh",
-        backgroundColor: "black",
-      }}>
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100%',
+        height: '10vh',
+        backgroundColor: 'black',
+      }}
+    >
       <AppBar
         position="sticky"
         sx={{
-          display: "flex",
-          height: "100%",
-          flexDirection: "row",
-          alignItems: "center",
-          backgroundColor: "black",
+          display: 'flex',
+          height: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: 'black',
         }}
       >
         <Icon
           sx={{
-            size: "large",
-            edge: "start",
-            color: "white",
-            ml: "1em",
-            mr: "0.5em",
+            size: 'large',
+            edge: 'start',
+            color: 'white',
+            ml: '1em',
+            mr: '0.5em',
           }}
         >
           <AdbIcon />
@@ -67,18 +69,18 @@ export default function Navbar(props) {
           component="div"
           sx={{
             flexGrow: 1,
-            fontSize: "2em",
+            fontSize: '2em',
           }}
         >
           IntelliConverse
         </Typography>
         {pages.map((page) => (
-          <Link key={page} href={`/${page !== "home" ? page : ""}`}>
+          <Link key={page} href={`/${page !== 'home' ? page : ''}`}>
             <Button
               variant="text"
               sx={{
-                color: "white",
-                fontSize: "1em",
+                color: 'white',
+                fontSize: '1em',
               }}
             >
               {page}
@@ -88,8 +90,8 @@ export default function Navbar(props) {
         <Avatar
           alt="user"
           sx={{
-            mr: "1em",
-            ml: "1.5em",
+            mr: '1em',
+            ml: '1.5em',
           }}
         >
           <IconButton onClick={handleClick}>
@@ -113,7 +115,7 @@ export default function Navbar(props) {
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
-                    handleLogin();
+                    handleLogin()
                   }}
                 >
                   <ListItemIcon>
@@ -128,7 +130,7 @@ export default function Navbar(props) {
               <div>
                 <MenuItem
                   onClick={() => {
-                    handleLogin();
+                    handleLogin()
                   }}
                 >
                   <ListItemIcon>
@@ -144,5 +146,5 @@ export default function Navbar(props) {
         </Avatar>
       </AppBar>
     </Box>
-  );
+  )
 }

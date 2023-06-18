@@ -294,14 +294,31 @@ function ChatInterface() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 2,
-              marginTop: 5,
-              overflow: 'auto',
-              minHeight: '100vh',
+              overflow: 'hidden ',
+              minHeight: '90vh',
             }}
           >
-            <Typography variant="h2" gutterBottom>
-              PDF Text Extractor
+            <Box
+              component="img"
+              src="background.png"
+              sx={{
+                position: 'absolute',
+                width: '100vw',
+                height: '100vh',
+                objectFit: 'cover',
+                zIndex: -1,
+                top: 0,
+                left: 0,
+              }}
+            />
+            <Typography
+              variant="h2"
+              gutterBottom
+              sx={{
+                mt: 15,
+              }}
+            >
+              Let&apos;s Index your PDF!
             </Typography>
             <label htmlFor="contained-button-file">
               <Input
@@ -310,14 +327,19 @@ function ChatInterface() {
                 type="file"
                 onChange={handleFileChange}
               />
-              <Button variant="outlined" component="span">
+              <Button
+                variant="outlined"
+                component="span"
+                sx={{
+                  mb: 3,
+                }}
+              >
                 Upload PDF
               </Button>
             </label>
             <ExtractButton />
           </Box>
         </Container>
-        <Footer />
       </section>
     )
   }
@@ -334,10 +356,27 @@ function ChatInterface() {
         }}
       >
         <Box
+          component="img"
+          src="background.png"
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: -1,
+            top: 0,
+            left: 0,
+          }}
+        />
+        <Box
           sx={{
             padding: 2,
             overflowY: 'auto',
             height: '80vh',
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
+            scrollbarWidth: 'none',
           }}
         >
           {messages.map((message, index) => (
@@ -354,6 +393,15 @@ function ChatInterface() {
                 onClick={() => {
                   new Audio(message.audioURL).play()
                 }}
+                sx={{
+                  backgroundColor:
+                    message.role === 'user' ? '#e2f2ff' : '#f7f7f7',
+                  borderRadius: 4,
+                  padding: 1,
+                  maxWidth: '70%',
+                  wordBreak: 'break-word',
+                  mr: 5,
+                }}
               >
                 {message.role === 'user' ? 'You: ' : 'Assistant: '}
               </Button>
@@ -365,25 +413,29 @@ function ChatInterface() {
           <div ref={endOfMessagesRef} />
         </Box>
         <Box
+          component="form"
           sx={{
-            padding: 2,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
             borderTop: 1,
-            borderColor: 'divider',
             display: 'flex',
+            alignItems: 'center',
             justifyContent: 'center',
+            backgroundColor: 'rgba(255,255,255,0.2)',
           }}
         >
           <Button
             variant="contained"
             onClick={recording ? stopRecording : startRecording}
-            sx={{marginRight: 2, padding: 2}}
-            disabled={assistantThinking} // Disable the button when the assistant is thinking
+            sx={{backgroundColor: '#4f8cff', m: 3}}
+            disabled={assistantThinking}
           >
             {recording ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
           </Button>
         </Box>
       </Box>
-      <Footer />
     </section>
   )
 }

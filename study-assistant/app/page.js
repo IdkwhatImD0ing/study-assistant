@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import Navbar from "./Components/NavBar/NavBar";
-import Footer from "./Components/Footer/Footer";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Image from "next/image";
-import Button from "@mui/material/Button";
-import HomepageImg from "./home/Assets/homepage.png";
+import Navbar from './Components/NavBar/NavBar'
+import Footer from './Components/Footer/Footer'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Image from 'next/image'
+import Button from '@mui/material/Button'
+import HomepageImg from './home/Assets/homepage.png'
 
 export default function Homepage() {
   return (
@@ -14,68 +14,71 @@ export default function Homepage() {
       <Navbar />
       <Box
         sx={{
-          width: "100%",
-          positive: "relative",
-          backgroundColor: "black",
+          width: '100%',
+          positive: 'relative',
+          backgroundColor: 'black',
+          overflow: 'hidden',
         }}
       >
-        <Image
-          src={HomepageImg}
+        <Box
+          component="img"
+          src="homepage.png"
           alt="homepage"
-          style={{
-            width: "100%",
-            height: "auto",
-            filter: "brightness(30%)",
-            position: "relative",
+          sx={{
+            top: 0,
+            left: 0,
+            position: 'absolute',
+            height: '100vh',
+            width: '100%',
+            objectFit: 'cover',
+            filter: 'brightness(0.5)',
           }}
         />
         <Typography
           variant="h1"
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            color: "white",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
           }}
         >
           IntelliConverse
         </Typography>
         <Typography
-          variant="h4"
+          variant="h5"
           sx={{
-            position: "absolute",
-            top: "60%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            color: "white",
+            position: 'absolute',
+            top: '60%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
           }}
         >
           An AI study pal for students, by students.
         </Typography>
         <Button
           variant="contained"
-          color="primary"
           size="large"
           href="/chat"
           sx={{
-            position: "absolute",
-            top: "70%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+            position: 'absolute',
+            top: '70%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
           }}
         >
           <Typography
             variant="h5"
             sx={{
-              fontColor: "white",
+              fontColor: 'white',
             }}
           >
             Get Started
           </Typography>
         </Button>
       </Box>
-      <Footer />
     </section>
-  );
+  )
 }
